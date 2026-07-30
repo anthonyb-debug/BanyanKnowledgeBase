@@ -942,34 +942,37 @@ const ARTICLES = [
   },
   {
     id:'directory', cat:'Directory', icon:'map-pin', title:'Facility Directory',
-    author:'BTC Facility Directory', updated:'Apr 25, 2023', read:4,
+    author:'BTC Facility Directory', updated:'Jul 31, 2026', read:4,
     tags:['directory','facilities','phone','fax','address','levels of care','locations','medicaid'],
     excerpt:'Phone, fax, address, and levels of care for every Banyan facility.',
     body:()=>{
       const F=[
-        {n:'Alaska',a:'4701 Begich Circle, Wasilla, AK 99654',loc:'VA ONLY',ph:'907-290-5450',fax:'907-290-5460'},
-        {n:'BHOPB — CADS #100',a:'7859 Lake Worth Road, Lake Worth, FL 33467',loc:'Detox/Res/PHP/MH/Tele',ph:'561-465-1370',fax:'561-465-1004'},
-        {n:'BHOPB — Seaside',a:'106 Blossom Lane, Palm Beach Shores, FL 33404',loc:'Detox/Res/PHP/Tele',ph:'561-389-9594 / 561-465-1220',fax:'561-465-1201'},
-        {n:'Boca',a:'1000 NW 15th Street, Boca Raton, FL 33486',loc:'Detox/Res/MH',ph:'561-404-5505 Ext. 501',fax:'561-409-4920'},
-        {n:'Chicago',a:'50 S. Main Street, Naperville, IL 60540',loc:'PHP/IOP/Tele',ph:'630-333-9912 Ext. 201',fax:'630-210-8164'},
-        {n:'Clearbrook, MA',a:'83 Hospital Road, Baldwinville, MA 01436',loc:'Detox/Res/MH',ph:'978-350-5003',fax:'978-894-2161'},
-        {n:'Clearbrook, PA',a:'1100 E. Northampton Street, Wilkes-Barre, PA 18706',loc:'Detox/Res/Tele',ph:'570-823-1171 Ext. 5325',fax:'570-823-1582'},
-        {n:'Delaware',a:'21 West Clark Ave Suite #4001, Milford, DE 19963',loc:'ALL LOC',ph:'302-315-0002 Ext. 276',fax:'302-725-0030'},
-        {n:'Heartland',a:'1237 E. 1600 North Road, Gilman, IL 60540',loc:'Detox/Res',ph:'815-707-2136 Ext. 2119',fax:'815-707-0241'},
-        {n:'Massachusetts',a:'66K Concord Street, Wilmington, MA 01887',loc:'PHP/IOP/Tele',ph:'978-737-7272 Ext. 401',fax:'978-909-3226'},
-        {n:'Palm Springs',a:'67580 Jones Road, Cathedral City, CA 92234',loc:'ALL LOC',ph:'760-616-5800 Ext. 816',fax:'760-673-7443'},
-        {n:'Philadelphia',a:'100 North Buckstown Dr Suite 100E, Langhorne, PA 19047',loc:'PHP/IOP/Tele',ph:'215-249-6226 Ext. 612',fax:'267-512-6053'},
-        {n:'Pompano',a:'950 N Federal Hwy, Pompano Beach, FL 33062',loc:'PHP/IOP/Tele/MH',ph:'954-533-7705 Ext. 163',fax:'954-533-7717'},
-        {n:'Sebring',a:'1062 Lake Sebring Dr, Sebring, FL 33870',loc:'Detox/Res/MH',ph:'863-451-0084 Ext. 967',fax:'863-658-4120'},
-        {n:'Stuart',a:'201 SE Osceola Street, Stuart, FL 34994',loc:'Detox/Res',ph:'772-200-4411 Ext. 301',fax:'772-324-6455'},
-        {n:'Texas #1739',a:'4168 Co Road 444, Waelder, TX 78959',loc:'Detox/Res/PHP/Tele',ph:'830-283-3003 Ext. 880',fax:'830-522-2375'},
-        {n:'Tampa',a:'Tampa, FL',loc:'',ph:'813-521-7847',fax:''},
-        {n:'Gulf Breeze',a:'Gulf Breeze / Pensacola, FL',loc:'',ph:'850-677-0302 / 850-605-3295',fax:''},
-        {n:'Castle Rock',a:'Castle Rock, CO',loc:'',ph:'303-381-8340',fax:''},
+        {n:'Alaska',a:'4701 Begich Circle, Wasilla, AK 99654',loc:'VA ONLY',ph:['907-290-5450 — Option 3'],fax:'907-290-5460'},
+        {n:'BHOPB — CADS #100 (Lake Worth)',a:'7859 Lake Worth Road, Lake Worth, FL 33467',loc:'Detox/Res/PHP/MH/Tele',ph:['561-465-1000 — Ext. 1370 (or 1000)'],fax:'561-465-1004'},
+        {n:'BHOPB — Lake Worth Nursing',a:'7859 Lake Worth Road, Lake Worth, FL 33467',loc:'Nursing',ph:['561-466-4673'],fax:''},
+        {n:'BHOPB — Seaside',a:'106 Blossom Lane, Palm Beach Shores, FL 33404',loc:'Detox/Res/PHP/Tele',ph:['561-389-9594','561-465-1220'],fax:'561-465-1201'},
+        {n:'Boca',a:'1000 NW 15th Street, Boca Raton, FL 33486',loc:'Detox/Res/MH',ph:['561-404-5505 — Option 2 (clinical staff)','561-404-5505 — Option 7 (residence)'],fax:'561-409-4920'},
+        {n:'Chicago (Naperville)',a:'50 S. Main Street, Naperville, IL 60540',loc:'PHP/IOP/Tele',ph:['630-333-9912'],fax:'630-210-8164'},
+        {n:'Clearbrook, MA',a:'83 Hospital Road, Baldwinville, MA 01436',loc:'Detox/Res/MH',ph:['978-350-5003'],fax:'978-894-2161'},
+        {n:'Clearbrook, PA (Laurel Run)',a:'1100 E. Northampton Street, Wilkes-Barre, PA 18706',loc:'Detox/Res/Tele',ph:['570-823-1171 — Option 3'],fax:'570-823-1582'},
+        {n:'Delaware',a:'21 West Clark Ave Suite #4001, Milford, DE 19963',loc:'ALL LOC',ph:['302-315-0002 — Ext. 265, 261, or 276'],fax:'302-725-0030'},
+        {n:'Gulf Breeze',a:'Gulf Breeze / Pensacola, FL',loc:'',ph:['850-677-0302 — Option 1 or 3','850-605-3295'],fax:''},
+        {n:'Heartland',a:'1237 E. 1600 North Road, Gilman, IL 60540',loc:'Detox/Res',ph:['331-302-8043 (temporary)','815-707-2136 — Option 3 (nursing)'],fax:'815-707-0241'},
+        {n:'Massachusetts PHP',a:'66K Concord Street, Wilmington, MA 01887',loc:'PHP/IOP/Tele',ph:['978-737-7272'],fax:'978-909-3226'},
+        {n:'Palm Springs',a:'67580 Jones Road, Cathedral City, CA 92234',loc:'ALL LOC',ph:['760-616-5800','760-668-9003 — Option 3'],fax:'760-673-7443'},
+        {n:'Palm Springs — PHP (Clinical)',a:'Cathedral City, CA',loc:'PHP',ph:['760-992-3470 — Ext. 827'],fax:''},
+        {n:'Palm Springs — PHP (Housing)',a:'Cathedral City, CA',loc:'PHP',ph:['760-992-3470 — Ext. 834'],fax:''},
+        {n:'Philadelphia',a:'100 North Buckstown Dr Suite 100E, Langhorne, PA 19047',loc:'PHP/IOP/Tele',ph:['215-249-6226 — Ext. 612'],fax:'267-512-6053'},
+        {n:'Pompano',a:'950 N Federal Hwy, Pompano Beach, FL 33062',loc:'PHP/IOP/Tele/MH',ph:['954-533-7705 — Ext. 163','954-821-2285'],fax:'954-533-7717'},
+        {n:'Sebring',a:'1062 Lake Sebring Dr, Sebring, FL 33870',loc:'Detox/Res/MH',ph:['863-451-0084'],fax:'863-658-4120'},
+        {n:'Stuart',a:'201 SE Osceola Street, Stuart, FL 34994',loc:'Detox/Res',ph:['772-200-4411 — Ext. 320, 301, or Option 2'],fax:'772-324-6455'},
+        {n:'Tampa',a:'Tampa, FL',loc:'',ph:['813-521-7847','727-456-8190 (main facility)'],fax:''},
+        {n:'Texas #1739',a:'4168 Co Road 444, Waelder, TX 78959',loc:'Detox/Res/PHP/Tele',ph:['830-283-3003 — Ext. 880'],fax:'830-522-2375'},
+        {n:'Castle Rock',a:'Castle Rock, CO',loc:'',ph:['303-381-8340 — Option 1 and 3','720-877-0640 (not working)'],fax:''},
       ];
       const badges = s => s ? s.split('/').map(x=>`<span class="badge badge-green">${x.trim()}</span>`).join(' ') : '<span class="badge badge-gray">See team</span>';
       return `
-        ${C.callout('info','Reference as of 4/25/2023','Programs, numbers, and levels of care change — confirm current details with your team. The main corporate line is 954-533-7705 (extensions vary by department).')}
+        ${C.callout('info','Reference as of 7/31/2026','Programs, numbers, and levels of care change — confirm current details with your team. The main corporate line is 954-533-7705 (extensions vary by department).')}
         <div class="grid sm:grid-cols-2 gap-3">
           ${F.map(f=>`
             <div class="kcard p-4">
@@ -977,7 +980,7 @@ const ARTICLES = [
               <div class="text-xs mb-2 flex items-start gap-1" style="color:var(--text-3)"><i data-lucide="map-pin" class="w-3 h-3 mt-0.5 shrink-0"></i> ${f.a}</div>
               <div class="flex flex-wrap gap-1 mb-2.5">${badges(f.loc)}</div>
               <div class="text-sm font-data space-y-0.5" style="color:var(--text-2)">
-                <div><span class="font-700" style="color:var(--green-dark)">PH</span> ${f.ph}</div>
+                ${(Array.isArray(f.ph)?f.ph:[f.ph]).map((p,i)=>`<div><span class="font-700" style="color:${i===0?'var(--green-dark)':'transparent'}">PH</span> ${p}</div>`).join('')}
                 ${f.fax?`<div><span class="font-700" style="color:var(--text-3)">FAX</span> ${f.fax}</div>`:''}
               </div>
             </div>`).join('')}
@@ -990,7 +993,7 @@ const ARTICLES = [
   },
   {
     id:'key-numbers', cat:'Directory', icon:'phone-call', title:'Key Phone Numbers',
-    author:'BTC Facility Directory', updated:'Apr 25, 2023', read:2,
+    author:'BTC Facility Directory', updated:'Jul 31, 2026', read:2,
     tags:['phone','numbers','samhsa','veterans','fax','hr','billing','helpline','transfer'],
     excerpt:'Admissions, helplines, records, finance, HR, and specialty contact numbers in one place.',
     body:()=>`
@@ -1007,7 +1010,8 @@ const ARTICLES = [
         ['Veteran Affairs','888-221-6830'],
         ['Adolescent Help Line','855-977-5684'],
         ['Mobile Assessor Hotline','844-906-4673'],
-        ['DE Mobile Assessors Hotline / DE Team (PA)','302-291-4101'],
+        ['Delaware Admission','302-291-4101'],
+        ['Delaware Team','877-435-7302'],
         ['Telehealth','863-270-2276'],
       ])}
       <h2 id="records">Records</h2>
