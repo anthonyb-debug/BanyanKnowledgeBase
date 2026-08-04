@@ -425,6 +425,21 @@ const PMAP_IMG = "data:image/webp;base64,UklGRurtAABXRUJQVlA4IN7tAACQXAOdASp+BP8
 /* ---------- KNOWLEDGE BASE CONTENT (sourced verbatim from Banyan v2 docs) ---------- */
 const ARTICLES = [
 
+  /* ========== UPDATES ========== */
+  {
+    id:'campaign-updates', cat:'Updates', icon:'megaphone', title:'Campaign Updates',
+    author:'Client Cascade', updated:'Aug 3, 2026', read:2,
+    tags:['updates','campaign','callbacks','no answer','bad contact info','tickets','client cascade'],
+    excerpt:'The latest standing changes cascaded by the client — newest first.',
+    body:()=>`
+      ${C.callout('info','From the client','These updates were cascaded directly by the client. Newest first.')}
+      ${C.timeline([
+        {t:'Send a ticket for every call (8/3/26)', d:'Please send out a ticket each time you receive a call, regardless of whether the individual is being transferred to the facility. This gives facility operators greater oversight to ensure calls are answered/responded to within a reasonable time frame, and should also decrease the number of repeat calls coming to you.'},
+        {t:'No-answer callbacks — no longer closed (7/24/26)', d:'We are updating the procedure for no-answer callbacks: we will no longer close them, and will instead place all four fields in the lead for further follow-up. Anything that would typically be closed as bad contact info follows this. All other closed reasons stay the same — close them rather than leaving them open.'},
+      ])}
+    `,
+  },
+
   /* ========== GETTING STARTED ========== */
   {
     id:'welcome', cat:'Getting Started', icon:'hand-heart', title:'Welcome & Purpose',
@@ -1039,6 +1054,9 @@ const ARTICLES = [
 /* ---------- SIDEBAR NAV CONFIG ---------- */
 const NAV = [
   {section:null, items:[{id:'dashboard', label:'Dashboard', icon:'layout-dashboard'}]},
+  {section:'Updates', items:[
+    {id:'article:campaign-updates', label:'Campaign Updates', icon:'megaphone'},
+  ]},
   {section:'Getting Started', items:[
     {id:'article:welcome', label:'Welcome & Purpose', icon:'hand-heart'},
     {id:'article:core-systems', label:'Core Systems', icon:'layers'},
