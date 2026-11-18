@@ -436,6 +436,42 @@
     .fd-needs::-webkit-scrollbar { display:none; }
   }
   @media print { .fd-list, .fd-toolbar, .fd-needs { display:none; } .fd-layout { display:block; } }
+
+  /* ---------- Customer Service Call Guide ---------- */
+  .csg-picker { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:.5rem; }
+  .csg-pick { display:flex; align-items:flex-start; gap:.65rem; text-align:left; padding:.7rem .8rem; border-radius:12px;
+    background:var(--surface); border:1px solid var(--line); cursor:pointer; transition:border-color .15s, background .15s; font-family:'Inter',sans-serif; }
+  .csg-pick:hover { border-color:var(--accent); background:var(--green-soft); }
+  .csg-pick .ico { width:32px; height:32px; border-radius:9px; display:grid; place-items:center; background:var(--green-soft); color:var(--green); flex-shrink:0; }
+  .csg-pick .ico svg { width:16px; height:16px; }
+  .csg-pick b { display:block; font-size:.86rem; font-weight:600; color:var(--text); line-height:1.3; }
+  .csg-pick span.w { display:block; font-size:.76rem; color:var(--text-3); margin-top:.1rem; line-height:1.35; }
+  .csg-steps { display:grid; grid-template-columns:repeat(5,1fr); gap:0; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--surface); }
+  .csg-step { padding:.75rem .8rem; border-right:1px solid var(--line); }
+  .csg-step:last-child { border-right:0; }
+  .csg-step b { display:block; font:700 .82rem 'Poppins',sans-serif; color:var(--green-dark); letter-spacing:.02em; }
+  html.dark .csg-step b { color:var(--accent); }
+  .csg-step span { display:block; font-size:.78rem; color:var(--text-2); line-height:1.4; margin-top:.2rem; }
+  .csg-when { display:flex; gap:.5rem; align-items:flex-start; font-size:.9rem; color:var(--text-2); line-height:1.55; }
+  .csg-when strong { color:var(--text); font-weight:600; white-space:nowrap; }
+  .csg-reminders { border-left:3px solid var(--accent); padding:.2rem 0 .2rem 1rem; }
+  .csg-reminders > div:first-child { font-size:.8rem; font-weight:700; color:var(--text-2); margin-bottom:.5rem; }
+  .csg-link { color:var(--green); font-weight:600; background:none; border:0; padding:0; cursor:pointer; font-size:inherit; text-decoration:underline; text-underline-offset:2px; }
+  .csg-chat { display:flex; flex-direction:column; gap:.55rem; }
+  .csg-msg { max-width:85%; padding:.65rem .9rem; border-radius:14px; font-size:.92rem; line-height:1.55; }
+  .csg-msg small { display:block; font-size:.7rem; font-weight:700; margin-bottom:.15rem; color:var(--text-3); }
+  .csg-msg.caller { align-self:flex-start; background:var(--surface-2); border:1px solid var(--line); color:var(--text); border-bottom-left-radius:4px; }
+  .csg-msg.agent { align-self:flex-end; background:var(--green-soft); border:1px solid color-mix(in srgb,var(--green) 25%,var(--line)); color:var(--text); border-bottom-right-radius:4px; }
+  .csg-msg.agent small { color:var(--green-dark); }
+  html.dark .csg-msg.agent small { color:var(--accent); }
+  .ktable td.say-cell { color:var(--green-dark); font-weight:600; }
+  html.dark .ktable td.say-cell { color:var(--accent); }
+  @media (max-width: 640px){
+    .csg-steps { grid-template-columns:1fr; }
+    .csg-step { border-right:0; border-bottom:1px solid var(--line); }
+    .csg-step:last-child { border-bottom:0; }
+    .csg-msg { max-width:100%; }
+  }
 </style>
 </head>
 <body class="font-body antialiased">
@@ -667,6 +703,175 @@ const ARTICLES = [
         {t:'No-answer callbacks — no longer closed (7/24/26)', d:'We are updating the procedure for no-answer callbacks: we will no longer close them, and will instead place all four fields in the lead for further follow-up. Anything that would typically be closed as bad contact info follows this. All other closed reasons stay the same — close them rather than leaving them open.'},
       ])}
     `,
+  },
+
+  {
+    id:'cs-call-guide', cat:'Call Handling', icon:'headset', title:'Customer Service Call Guide',
+    author:'AGS – Customer Service Operations', updated:'Nov 19, 2026', read:8,
+    tags:['customer service','spiels','greeting','hold','transfer','complaint','callback','closing','empathy'],
+    excerpt:'Ready-to-use spiels for every type of call, with what to remember on each. Pick the situation you’re in and jump straight to it.',
+    body:()=>{
+      const say = t => `<span class="say">“${t}”</span>`;
+      const reminders = items => `<div class="csg-reminders"><div>Remember</div>${C.checklist(items)}</div>`;
+      const when = t => `<div class="csg-when"><strong>When:</strong><span>${t}</span></div>`;
+      const go = id => `document.getElementById('${id}').scrollIntoView({behavior:'smooth',block:'start'})`;
+      const S = [
+        ['opening','phone-incoming','Opening the call','Every call, first 10 seconds'],
+        ['general','info','General questions','Services, locations, contact info'],
+        ['admissions','heart-handshake','Treatment / admissions','For themselves or a loved one'],
+        ['existing-patient','users','Patient or family concern','Someone currently in treatment'],
+        ['complaints','frown','Upset or frustrated caller','Complaints, repeat callers'],
+        ['hold','pause','Placing on hold','You need a moment to check'],
+        ['transfers','arrow-right-left','Transferring a call','Another department or facility'],
+        ['follow-ups','phone-forwarded','Callbacks & follow-ups','“Nobody called me back”'],
+        ['business','building-2','Facilities, employees & others','Business-related callers'],
+        ['dont-know','circle-help','You don’t know the answer','Outside your knowledge'],
+        ['voicemail','voicemail','Leaving a voicemail','Callback not answered'],
+        ['closing','phone-off','Closing the call','Every call, last 10 seconds'],
+      ];
+      return `
+      ${C.quote('Every call is an opportunity to make someone feel heard, supported, and valued.','Our core principle')}
+      <p>These spiels are references, not lines to memorize. What matters most is how you communicate, how you show empathy, and how you take ownership of each call. Click the copy icon on any spiel to copy it.</p>
+
+      <h2 id="pick">What’s happening on the call?</h2>
+      <div class="csg-picker">${S.map(([id,ic,n,w])=>`
+        <button class="csg-pick" onclick="${go(id)}"><span class="ico"><i data-lucide="${ic}"></i></span><span><b>${n}</b><span class="w">${w}</span></span></button>`).join('')}
+      </div>
+
+      <h2 id="standard">Every call: Hear, Acknowledge, Assist, Confirm, Close</h2>
+      <div class="csg-steps">
+        <div class="csg-step"><b>Hear</b><span>Listen carefully and understand the concern.</span></div>
+        <div class="csg-step"><b>Acknowledge</b><span>Show empathy and recognize their situation.</span></div>
+        <div class="csg-step"><b>Assist</b><span>Take ownership and give the right help.</span></div>
+        <div class="csg-step"><b>Confirm</b><span>Make sure they understand the next steps.</span></div>
+        <div class="csg-step"><b>Close</b><span>End professionally and warmly.</span></div>
+      </div>
+
+      <h2 id="opening">1. Opening the call</h2>
+      ${when('Every call. Set a professional, welcoming first impression.')}
+      ${C.script('Greeting', say('Thank you for calling Banyan Treatment Centers. My name is [Agent Name]. How may I assist you today?'))}
+      ${C.callout('info','Identify as Banyan Customer Service','Per the 11/3/26 update, introduce yourself as part of Banyan Customer Service, not Admissions.')}
+      ${C.script('If they explain their concern right away', `${say('Absolutely, I’d be happy to help you with that.')}<br>${say('Of course. Let me see what I can do to assist you.')}<br>${say('Thank you for letting me know. Let me look into this for you.')}`)}
+      ${reminders(['Speak clearly and warmly, without sounding rushed.','Let the caller finish explaining before you respond.','Acknowledge the caller before jumping into questions.'])}
+
+      <h2 id="general">2. General questions</h2>
+      ${when('The caller asks about Banyan’s services, locations, contact information or general information.')}
+      ${C.script('Say', say('Absolutely! I’d be happy to help answer your questions. May I know a little more about what information you’re looking for?'))}
+      ${C.script('If you know the answer', say('Sure! I can help you with that. [Provide the information]. Is there anything else you’d like me to clarify?'))}
+      ${C.script('If you’re not sure', say('That’s a good question. I want to make sure I provide you with accurate information. Let me check with the appropriate department so we can point you in the right direction.'))}
+      ${reminders(['Never guess or give unverified information.','Keep explanations simple, and check the caller understood.'])}
+
+      <h2 id="admissions">3. Treatment / admissions inquiries</h2>
+      ${when('Someone is asking about treatment options for themselves or a loved one.')}
+      ${C.script('Say', say('I’d be happy to help guide you through the next steps. May I ask if you’re calling for yourself or on behalf of a family member?'))}
+      ${C.tabs('csg-adm',[
+        {label:'Calling for a loved one', html:C.script('Say', say('Of course. It’s understandable that you want to explore the available options for someone you care about. Let me help connect you with the appropriate team who can assist you further.'))},
+        {label:'Calling for themselves', html:C.script('Say', say('Thank you for reaching out to us. We understand that taking this step can be difficult, and we’re here to help guide you through the process.'))},
+        {label:'Asking about availability', html:C.script('Say', say('Let me connect you with our admissions team so they can discuss the available options and provide you with the most appropriate information.'))},
+      ])}
+      <h3 class="font-display font-600 text-base mt-5" style="color:var(--text)">If Admissions is busy</h3>
+      ${C.script('Offer a callback', say('Our admissions team is with other callers right now. We’ll call you back as soon as someone is free, which usually doesn’t take long.'))}
+      ${C.script('If they agree', say('Thank you for your understanding. May I please confirm the best contact number to reach you?'))}
+      ${C.script('After confirming the number', say('Perfect, thank you! I’ll make sure your callback request is properly communicated to our admissions team.'))}
+      ${reminders(['Show empathy without sounding scripted, and never rush the caller.','Never guarantee admission, treatment availability or a specific callback time.','Confirm the best callback number, then document and communicate the request.'])}
+
+      <h2 id="existing-patient">4. Patient or family member concerns</h2>
+      ${when('A family member or patient is asking about someone currently in treatment.')}
+      ${C.script('Say', say('I understand you’re calling to check on your loved one. Let me see how I can direct you to the appropriate team.'))}
+      ${C.script('If they ask for patient information', say('I understand your concern. For patient privacy and confidentiality, certain information may only be shared with authorized individuals. Let me connect you with the appropriate department that can assist you.'))}
+      ${C.script('If they’re worried', say('I understand that you want to make sure everything is okay. Let me help direct your concern to the appropriate team so it can be addressed.'))}
+      ${C.callout('danger','HIPAA comes first','Never confirm or deny that someone is a patient. Use the exact line in <button class="csg-link" onclick="openArticle(\'hipaa\')">HIPAA & Confidentiality</button>.')}
+      ${reminders(['Be compassionate.','Never share protected patient information without proper authorization.','Route the concern to the right team.'])}
+
+      <h2 id="complaints">5. Upset or frustrated callers</h2>
+      ${when('The caller is upset, frustrated or unhappy with a previous interaction or service.')}
+      ${C.script('Say', say('I understand your frustration, and I’m sorry this has been a difficult experience for you. Thank you for bringing this to our attention. I’d like to understand what happened so I can help direct your concern appropriately.'))}
+      ${C.script('If they keep venting', say('I completely understand why that would be frustrating. I appreciate you taking the time to explain this to me.'))}
+      ${C.script('If they’ve called multiple times', say('I apologize that you’ve had to follow up more than once. I understand how inconvenient that can be. Let me review the concern and see how we can get you to the right person for assistance.'))}
+      ${C.script('If they demand an immediate fix', say('I understand that you’d like this resolved as soon as possible. While I don’t want to give you an expectation I cannot guarantee, I’ll make sure your concern is directed to the appropriate team.'))}
+      ${reminders(['Don’t interrupt, get defensive, argue or blame another department.','Acknowledge their feelings, then focus on what can be done next.','Sometimes callers first need to feel that someone is genuinely listening.'])}
+      ${C.callout('warn','If a caller becomes threatening or abusive','Follow <button class="csg-link" onclick="openArticle(\'abusive-callers\')">Abusive Callers</button> and report it to your manager right away.')}
+
+      <h2 id="hold">6. Placing a caller on hold</h2>
+      ${when('You need time to check information or coordinate with another department.')}
+      ${C.script('Ask first', say('Would it be okay if I place you on a brief hold for about two to three minutes while I check on that information?'))}
+      ${C.script('If they agree', say('Thank you. I’ll be right back with you.'))}
+      ${C.script('When you return', say('Thank you so much for holding. I appreciate your patience.'))}
+      ${C.script('If you need more time', say('I appreciate your patience. I’m still checking on this for you. Would you mind holding for another moment, or would you prefer that we arrange a callback?'))}
+      ${reminders(['Always ask permission and give a time estimate.','Thank the caller when you return, and never leave them waiting without checking back.'])}
+
+      <h2 id="transfers">7. Transferring a call</h2>
+      ${when('The caller needs another department or a facility.')}
+      ${C.script('Say', say('I’d be happy to connect you with the appropriate department that can better assist you with this concern.'))}
+      ${C.script('Confirm before you transfer', say('Just to make sure I connect you correctly, may I confirm that you’re calling regarding [reason for transfer]?'))}
+      ${C.script('After they confirm', say('Thank you for confirming. Please allow me a moment while I connect your call.'))}
+      ${C.script('If the transfer can’t be completed', say('I’m sorry, but I’m having difficulty connecting your call at the moment. Let me check if there’s another way we can get your concern to the appropriate team.'))}
+      ${C.callout('warn','Facility transfers can come back to you','If a facility doesn’t answer, the call routes back to you (all sites except Lake Worth and Seminole). Set that expectation before transferring and always give the ticket number. See <button class="csg-link" onclick="openArticle(\'campaign-updates\')">Campaign Updates</button>.')}
+      ${reminders(['Avoid blind transfers, and explain why you’re transferring.','Make sure the destination is right.','Don’t make callers repeat their concern.'])}
+
+      <h2 id="follow-ups">8. Callbacks & follow-ups</h2>
+      ${when('The caller wants an update or is waiting for someone to call them back.')}
+      ${C.script('Say', say('I understand you’re following up on a previous request. Let me check the details so I can help determine the next steps.'))}
+      ${C.script('If the callback is still pending', say('Based on the information available, your request is still pending with the appropriate team. I’ll make sure the follow-up is properly documented and directed to them.'))}
+      ${C.script('Giving the 24–48 hour timeframe', say('The expected timeframe for a callback is approximately 24 to 48 hours. However, this may depend on the team’s availability and the nature of your request.'))}
+      ${C.script('If nobody has contacted them', say('I apologize that you haven’t received an update yet. I understand how important this is, especially when you’re waiting for information. Let me make sure we properly communicate your follow-up request.'))}
+      ${reminders(['Acknowledge earlier follow-ups, and never dismiss a caller because a ticket already exists.','Check existing records, then document the concern and next steps accurately.','Never promise a callback time that hasn’t been confirmed.'])}
+
+      <h2 id="business">9. Facilities, employees & other contacts</h2>
+      ${when('Facility staff, employees, marketing contacts or other business callers.')}
+      ${C.script('Say', say('Thank you for providing that information. Let me make sure I direct your call to the appropriate person or department.'))}
+      ${C.script('If they want a specific employee', say('May I have the name of the person you’re trying to reach and the reason for your call? I’ll check how I can best assist you.'))}
+      ${reminders(['Identify the caller’s purpose, and skip patient questions when the call isn’t patient-related.','Follow the correct ticketing, documentation and call classification.'])}
+      ${C.callout('info','Need a number?','Use the <button class="csg-link" onclick="openArticle(\'directory\')">Facility Directory</button> or <button class="csg-link" onclick="openArticle(\'key-numbers\')">Key Phone Numbers</button>.')}
+
+      <h2 id="dont-know">10. When you don’t know the answer</h2>
+      ${when('The caller asks something outside your knowledge or authority.')}
+      ${C.script('Say', say('That’s a good question. I want to make sure I give you the correct information rather than provide something inaccurate. Let me check with the appropriate team.'))}
+      ${C.script('Or', say('I don’t want to mislead you with information I’m not entirely certain about. Let me find the right person who can help clarify that for you.'))}
+      ${C.callout('success','It’s okay not to know everything','What matters is knowing how to find the correct answer.')}
+
+      <h2 id="voicemail">11. Leaving a voicemail</h2>
+      ${when('You return a call and nobody answers.')}
+      ${C.script('Voicemail', say('Hello, this is [Agent Name] calling from Banyan Treatment Centers. We’re returning your call. Please feel free to contact us again at your convenience. Thank you, and have a great day.'))}
+      ${reminders(['Keep it brief and professional, with no sensitive patient information.','Document the attempt and follow the callback procedure.'])}
+
+      <h2 id="closing">12. Closing the call</h2>
+      ${when('The concern has been handled or properly routed.')}
+      ${C.script('Ask', say('Before we end the call, is there anything else I can assist you with today?'))}
+      ${C.script('If they say no', say('Alright! Thank you for calling Banyan Treatment Centers. We appreciate your time. Take care, and have a great day!'))}
+      ${C.script('If they shared a concern', say('Thank you for bringing this to our attention. We appreciate you giving us the opportunity to assist you. Have a great day.'))}
+      ${reminders(['Never end a call abruptly.','End warmly, so the caller feels their concern matters.'])}
+
+      <h2 id="phrases">Better ways to say it</h2>
+      <div class="overflow-x-auto rounded-xl border" style="border-color:var(--line)"><table class="ktable"><thead><tr><th>Instead of</th><th>Try</th></tr></thead><tbody>
+        ${[['Okay.','Absolutely, I can help you with that.'],['Hold on.','May I place you on a brief hold while I check that for you?'],['I don’t know.','Let me verify that information for you.'],['You need to call another department.','Let me connect you with the appropriate department.'],['That’s not our department.','That concern is best handled by our [department]. Let me help direct you.'],['You have to wait.','I understand you’re waiting for an update. Let me check the current status.'],['There’s nothing I can do.','Let me see what options are available to help you.'],['You’ll get a callback ASAP.','Our admissions team is with other callers right now. We’ll call you back as soon as someone is free, which usually doesn’t take long.'],['Is that all?','Is there anything else I can assist you with today?']].map(([a,b])=>`<tr><td style="color:var(--text-2)">${a}</td><td class="say-cell">${b}</td></tr>`).join('')}
+      </tbody></table></div>
+
+      <h2 id="behaviors">What good service looks like</h2>
+      ${C.table(['Behavior','Do','Avoid'],[
+        ['<b>Empathy</b>','Acknowledge the caller’s feelings and concerns.','Ignoring emotional cues.'],
+        ['<b>Active listening</b>','Let callers explain before responding.','Interrupting or rushing.'],
+        ['<b>Ownership</b>','Guide the caller to the next step.','Transferring without explanation.'],
+        ['<b>Clear communication</b>','Use simple, understandable language.','Jargon or vague statements.'],
+        ['<b>Professional closing</b>','Confirm if they need anything else.','Ending the call abruptly.'],
+      ])}
+      <h3 class="font-display font-600 text-base mt-5 mb-2" style="color:var(--text)">Habits to drop</h3>
+      ${C.xlist(['<b>Being too transactional.</b> Calls aren’t tasks to complete; every caller deserves acknowledgment and a helpful response.','<b>Skipping empathy.</b> Don’t jump into verification or troubleshooting when someone is clearly upset or worried.','<b>Unnecessary transfers.</b> Understand the concern and confirm the right destination first.','<b>Repetitive questioning.</b> Review what you already have before asking callers to repeat themselves.','<b>Abrupt endings.</b> Every call gets a proper closing, even if the concern can’t be resolved right away.'])}
+
+      <h2 id="example">Example: a complete call</h2>
+      <div class="csg-chat">
+        <div class="csg-msg caller"><small>Caller</small>I’ve been trying to get someone to call me back, but nobody has contacted me. I’ve already called twice.</div>
+        <div class="csg-msg agent"><small>Agent · Acknowledge</small>I’m sorry you’ve had to follow up multiple times. I understand how frustrating that must be, especially when you’re waiting for an important update.</div>
+        <div class="csg-msg caller"><small>Caller</small>Yes, I’ve been waiting for days.</div>
+        <div class="csg-msg agent"><small>Agent · Assist</small>I understand. Let me check the details of your previous request so I can see what’s been documented and make sure your follow-up is properly communicated to the appropriate team.</div>
+        <div class="csg-msg caller"><small>Caller</small>Okay.</div>
+        <div class="csg-msg agent"><small>Agent · Confirm</small>Thank you for your patience. I’ve reviewed the information, and I’ll make sure this follow-up is documented and directed to the appropriate team. While I cannot guarantee an exact callback time, we’ll make sure the request is properly communicated.</div>
+        <div class="csg-msg caller"><small>Caller</small>Alright, thank you.</div>
+        <div class="csg-msg agent"><small>Agent · Close</small>You’re welcome. Before we end the call, is there anything else I can assist you with today?</div>
+      </div>
+      ${C.callout('success','Our commitment','We are not just here to answer calls. We are here to make sure every caller feels heard, understood, and properly assisted.')}
+    `;
+    },
   },
 
   /* ========== GETTING STARTED ========== */
@@ -1276,6 +1481,7 @@ const NAV = [
     {id:'article:abbreviations', label:'Abbreviations', icon:'book-a'},
   ]},
   {section:'Call Handling', items:[
+    {id:'article:cs-call-guide', label:'Customer Service Call Guide', icon:'headset'},
     {id:'article:call-flow', label:'Call Flow & Intake', icon:'workflow'},
     {id:'article:insurance-questions', label:'Asking About Insurance', icon:'shield-check'},
     {id:'article:loved-one', label:'Searching for a Loved One', icon:'user-search'},
