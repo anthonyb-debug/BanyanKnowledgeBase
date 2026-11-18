@@ -472,6 +472,41 @@
     .csg-step:last-child { border-bottom:0; }
     .csg-msg { max-width:100%; }
   }
+
+  /* ---------- Area Code Finder ---------- */
+  .acf-form { display:grid; grid-template-columns:minmax(180px,1.1fr) 1fr 1fr; gap:.75rem; padding:1.1rem; }
+  .acf-field label { display:block; font-size:.78rem; font-weight:600; color:var(--text-2); margin-bottom:.35rem; }
+  .acf-field input, .acf-field select { width:100%; height:46px; padding:0 .8rem; border-radius:12px; border:1.5px solid var(--line); background:var(--surface);
+    color:var(--text); font:600 1rem 'Inter',sans-serif; outline:none; }
+  .acf-field input { font:800 1.25rem 'Nunito',sans-serif; letter-spacing:.06em; }
+  .acf-field input::placeholder { font-weight:500; letter-spacing:0; color:var(--text-3); font-size:.95rem; }
+  .acf-field input:focus, .acf-field select:focus { border-color:var(--green); box-shadow:0 0 0 4px var(--ring); }
+  .acf-status { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin:.9rem 0 .6rem; font-size:.88rem; color:var(--text-2); min-height:1.5rem; }
+  .acf-status b { color:var(--text); }
+  .acf-results { display:flex; flex-direction:column; gap:.6rem; }
+  .acf-card { display:grid; grid-template-columns:44px 1fr auto; gap:.25rem 1rem; padding:1rem 1.1rem; align-items:start; }
+  .acf-card.is-top { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent), var(--shadow); }
+  .acf-rank { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; font:800 1rem 'Nunito',sans-serif; background:var(--surface-2); color:var(--text-2); }
+  .acf-card.is-top .acf-rank { background:var(--green); color:#fff; }
+  .acf-name { font:600 1.05rem 'Poppins',sans-serif; color:var(--text); line-height:1.3; }
+  .acf-addr { font-size:.84rem; color:var(--text-2); margin-top:.15rem; }
+  .acf-miles { text-align:right; font:800 1.3rem 'Nunito',sans-serif; color:var(--text); white-space:nowrap; }
+  .acf-miles small { display:block; font:600 .7rem 'Inter',sans-serif; color:var(--text-3); }
+  .acf-meta { grid-column:2 / -1; display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
+  .acf-progs { grid-column:2 / -1; font-size:.8rem; color:var(--text-3); margin-top:.35rem; line-height:1.5; }
+  .acf-progs b { color:var(--green-dark); font-weight:700; }
+  html.dark .acf-progs b { color:var(--accent); }
+  .acf-guide { grid-column:2 / -1; display:flex; align-items:flex-start; gap:.4rem; font-size:.84rem; color:var(--text); margin-top:.5rem; padding:.5rem .7rem; border-radius:10px; background:var(--surface-2); }
+  .acf-guide svg, .acf-guide i { width:15px; height:15px; color:var(--green); flex-shrink:0; margin-top:.15rem; }
+  .acf-guide.warn { background:color-mix(in srgb,#F59E0B 12%,var(--surface)); }
+  .acf-guide.warn svg, .acf-guide.warn i { color:#D97706; }
+  .acf-actions { grid-column:2 / -1; margin-top:.5rem; }
+  .acf-empty { padding:1.4rem; text-align:center; color:var(--text-2); font-size:.9rem; }
+  @media (max-width: 720px){
+    .acf-form { grid-template-columns:1fr; }
+    .acf-card { grid-template-columns:36px 1fr; }
+    .acf-miles { grid-column:2; text-align:left; }
+  }
 </style>
 </head>
 <body class="font-body antialiased">
@@ -1133,7 +1168,7 @@ const ARTICLES = [
         ['<span class="badge badge-gray">Not assigned</span>','Delaware — ask your supervisor which Team to use until this is confirmed.'],
       ])}
       ${C.callout('warn','* Tampa (Seminole) is a newer program','Tampa calls can be transferred using the numbers in the Facility Directory. Tampa is on a different phone system, so if no one answers, the call won’t come back to you. Always create a ticket and give the caller the ticket number.')}
-      ${C.callout('info','Projected Facility drives the region','Choose the Projected Facility based on the campaign/helpline and/or the area code and the closest facility — the Team (Region) follows from it.')}
+      ${C.callout('info','Projected Facility drives the region','Choose the Projected Facility based on the campaign/helpline and/or the area code and the closest facility — the Team (Region) follows from it. The <button class="csg-link" onclick="openArticle(\'area-code-finder\')">Area Code Finder</button> does this for you.')}
     `,
   },
 
@@ -1256,7 +1291,7 @@ const ARTICLES = [
         {t:'Lead Status', d:'Stays Open while the lead needs follow-up.'},
         {t:'Lead Priority', d:'“Needs VOB” is the only priority you enter.'},
         {t:'Team (Region)', d:'Based on the Projected Facility selected.'},
-        {t:'Projected Facility', d:'Based on the campaign/helpline and/or the area code and the closest facility.'},
+        {t:'Projected Facility', d:'Based on the campaign/helpline and/or the area code and the closest facility. Use the <button class="csg-link" onclick="openArticle(\'area-code-finder\')">Area Code Finder</button>.'},
       ])}
       ${C.callout('warn','All four are mandatory for an Open lead','A lead left in Open status without these cannot be followed up correctly.')}
     `,
@@ -1436,6 +1471,45 @@ const ARTICLES = [
     `,
   },
   {
+    id:'area-code-finder', cat:'Directory', icon:'locate-fixed', title:'Area Code Finder',
+    author:'Banyan Area Code Finder', updated:'Nov 19, 2026', read:3,
+    onMount:()=>acfMount(),
+    tags:['area code','projected facility','nearest facility','routing','717','telehealth','zip'],
+    excerpt:'Type the caller’s area code to see the nearest Banyan facility for their program, with the client’s routing overrides built in.',
+    body:()=>`
+      ${acfShell()}
+
+      <h2 id="how">How it works</h2>
+      ${C.timeline([
+        {t:'Enter the area code', d:'Type the three-digit area code, or paste the caller’s full number (a leading 1 is ignored). The finder looks it up in a list of 326 U.S. area codes, each mapped to a representative city.'},
+        {t:'Pick the call type and program', d:'Call type comes from the CTM tag on the call. Program narrows the results to facilities whose published programs include it. Leave it on All Programs if you don’t know yet.'},
+        {t:'It measures the distance', d:'For every facility offering that program, the finder measures the straight-line miles from the area code’s representative city to the facility, then shows the three closest.'},
+        {t:'Client routing overrides win', d:'If one of the rules below applies, it replaces the distance result with a single facility.'},
+        {t:'Use it to fill in Projected Facility', d:'The top result is your Projected Facility for the lead, and its Team is the Team (Region). Then use “Numbers & extensions” to open that facility in the Facility Directory.'},
+      ])}
+
+      <h2 id="rules">Routing overrides</h2>
+      ${C.table(['When','Route to','Why'],[
+        ['Call is tagged <b>Telehealth</b> in CTM','Banyan Telehealth','Client override'],
+        ['Call is tagged <b>Gulf Breeze Outpatient</b>','Banyan Gulf Breeze Outpatient','Client override'],
+        ['Caller’s area code is <b>717</b>','Clearbrook Pennsylvania','Client override'],
+        ['Caller’s area code is in <b>Delaware</b> (302)','Banyan Delaware','Client override'],
+        ['Anything else','Nearest facility offering the program','Distance'],
+      ])}
+      ${C.callout('info','Example','A caller from 717 (Lancaster, PA) is about 74 miles from Banyan Philadelphia and 81 from Clearbrook PA. Distance alone would pick Philadelphia, but the 717 override sends them to Clearbrook Pennsylvania, matching the client’s missed-call update.')}
+
+      <h2 id="limits">Before you rely on it</h2>
+      ${C.checklist([
+        'Area codes are approximate. The finder uses a representative city, not where the caller actually is, and people keep their numbers when they move. Confirm the caller’s city and state.',
+        'Miles are straight-line, not driving distance, and don’t reflect beds, drive time or whether a facility will accept the patient.',
+        'Facilities marked <b>Opening Soon</b> aren’t confirmed open. Confirm with admissions before mentioning them.',
+        'The finder is not an admissions decision. Program, clinical fit and placement are always confirmed by admissions.',
+      ])}
+      ${C.callout('warn','Unmapped area code?','Ask the caller for their city and state and choose the closest facility in the Facility Directory. Tell your supervisor so the area code can be added.')}
+      <p class="text-xs" style="color:var(--text-3)">Sources: U.S. telephone area code region map; facility programs from Banyan’s public directory (snapshot Oct 15, 2026).</p>
+    `,
+  },
+  {
     id:'key-numbers', cat:'Directory', icon:'phone-call', title:'Key Phone Numbers',
     author:'BTC Facility Directory', updated:'Jul 31, 2026', read:2,
     tags:['phone','numbers','samhsa','veterans','fax','hr','billing','helpline','transfer'],
@@ -1528,6 +1602,7 @@ const NAV = [
   ]},
   {section:'Directory', items:[
     {id:'article:directory', label:'Facility Directory', icon:'map-pin'},
+    {id:'article:area-code-finder', label:'Area Code Finder', icon:'locate-fixed'},
     {id:'article:key-numbers', label:'Key Phone Numbers', icon:'phone-call'},
   ]},
   {section:'Resources', items:[
@@ -2355,6 +2430,112 @@ document.addEventListener('keydown',e=>{
   e.preventDefault(); i.focus();
 });
 setInterval(()=>{ if(state.user) loadFD(true); }, FD_REFRESH_MS);
+
+/* ===================================================================
+   AREA CODE FINDER
+   Ported from Banyan_Area_Code_Finder (Excel). Same data and math:
+   area code → representative city lat/long → straight-line miles to
+   each facility that offers the chosen program → nearest 3.
+   Client routing overrides (Routing Rules sheet) replace the result.
+   To update: edit ACF_AREA / ACF_FAC below (same columns as the sheet).
+   =================================================================== */
+const ACF_AREA={"201":["Jersey City","NJ",40.7328,-74.0755],"202":["Washington","DC",38.910353,-77.017739],"203":["New Haven","CT",41.3082,-72.9282],"205":["Birmingham","AL",33.5207,-86.8025],"206":["Seattle","WA",47.610902,-122.336422],"207":["Portland","ME",43.662607,-70.257949],"208":["Boise","ID",43.6038,-116.2729],"209":["Stockton","CA",37.958,-121.2876],"210":["San Antonio","TX",29.468413,-98.528889],"212":["New York","NY",40.750649,-73.997298],"213":["Los Angeles","CA",33.973665,-118.249039],"214":["Dallas","TX",32.788309,-96.799572],"215":["Philadelphia","PA",40.0018,-75.1179],"216":["Cleveland","OH",41.489929,-81.671842],"217":["Springfield","IL",39.800544,-89.648894],"218":["Duluth","MN",46.7833,-92.1066],"219":["Gary","IN",41.5907,-87.3199],"220":["Columbus","OH",40.100924,-83.013402],"224":["Arlington Heights","IL",42.11278,-87.979542],"225":["Baton Rouge","LA",30.449581,-91.185971],"228":["Gulfport","MS",30.387191,-89.099244],"229":["Albany","GA",31.573054,-84.154783],"231":["Muskegon","MI",43.23747,-86.253396],"234":["Akron","OH",41.04349,-81.524017],"239":["Fort Myers","FL",26.623381,-81.883191],"240":["Rockville","MD",39.084,-77.1528],"248":["Troy","MI",42.6061,-83.2976],"251":["Mobile","AL",30.6944,-88.0431],"252":["Greenville","NC",35.5804,-77.3926],"253":["Tacoma","WA",47.2537,-122.4443],"254":["Waco","TX",31.552011,-97.1382],"256":["Huntsville","AL",34.724611,-86.565541],"260":["Fort Wayne","IN",41.0938,-85.0707],"262":["Waukesha","WI",43.022155,-88.204676],"267":["Philadelphia","PA",40.0018,-75.1179],"269":["Kalamazoo","MI",42.264543,-85.561545],"270":["Bowling Green","KY",37.058097,-86.463061],"272":["Scranton","PA",41.4019,-75.6376],"276":["Bristol","VA",36.610828,-82.169407],"281":["Houston","TX",29.8131,-95.3098],"301":["Rockville","MD",39.084,-77.1528],"302":["Wilmington","DE",39.723588,-75.541208],"303":["Denver","CO",39.7263,-104.8568],"304":["Charleston","WV",38.351327,-81.627994],"305":["Miami","FL",25.779764,-80.198763],"307":["Cheyenne","WY",41.100082,-104.924884],"308":["Grand Island","NE",40.949883,-98.297321],"309":["Peoria","IL",40.6931,-89.5898],"310":["Los Angeles","CA",33.973665,-118.249039],"312":["Chicago","IL",41.885155,-87.621512],"313":["Detroit","MI",42.34703,-83.060048],"314":["Saint Louis","MO",38.631397,-90.192753],"315":["Syracuse","NY",43.0481,-76.1474],"316":["Wichita","KS",37.6922,-97.3375],"317":["Indianapolis","IN",39.773669,-86.10956],"318":["Shreveport","LA",32.505424,-93.748748],"319":["Cedar Rapids","IA",41.975486,-91.659172],"320":["Saint Cloud","MN",45.487084,-94.242777],"321":["Orlando","FL",28.541769,-81.374357],"323":["Los Angeles","CA",33.973665,-118.249039],"325":["Abilene","TX",32.572842,-99.642121],"330":["Akron","OH",41.04349,-81.524017],"331":["Naperville","IL",41.764585,-88.144165],"332":["New York","NY",40.750649,-73.997298],"334":["Montgomery","AL",32.381774,-86.297649],"336":["Greensboro","NC",36.070822,-79.767692],"337":["Lafayette","LA",30.239007,-91.991284],"339":["Boston","MA",42.355097,-71.065737],"340":["Charlotte Amalie","VI",17.99758,-64.822222],"341":["Oakland","CA",37.77576,-122.218572],"346":["Houston","TX",29.8131,-95.3098],"347":["Brooklyn","NY",40.6937,-73.989859],"351":["Lowell","MA",42.656045,-71.303309],"352":["Gainesville","FL",29.6487,-82.325412],"360":["Olympia","WA",46.978514,-122.875905],"361":["Corpus Christi","TX",27.796812,-97.399092],"364":["Bowling Green","KY",37.058097,-86.463061],"380":["Columbus","OH",40.100924,-83.013402],"385":["Salt Lake City","UT",40.756311,-111.899962],"386":["Daytona Beach","FL",29.192391,-81.04676],"401":["Providence","RI",41.8227,-71.4145],"402":["Omaha","NE",41.2586,-95.9378],"404":["Atlanta","GA",33.8444,-84.4741],"405":["Oklahoma City","OK",35.4916,-97.5628],"406":["Billings","MT",45.607108,-108.341517],"407":["Orlando","FL",28.541769,-81.374357],"408":["San Jose","CA",37.3394,-121.895],"409":["Beaumont","TX",30.073053,-94.105486],"410":["Baltimore","MD",39.294961,-76.622341],"412":["Pittsburgh","PA",40.482322,-79.9415],"413":["Springfield","MA",42.1015,-72.5898],"414":["Milwaukee","WI",43.0389,-87.9065],"415":["San Francisco","CA",37.779562,-122.419293],"417":["Springfield","MO",37.21421,-93.295218],"419":["Toledo","OH",41.6639,-83.5552],"423":["Chattanooga","TN",35.0456,-85.3097],"424":["Los Angeles","CA",33.973665,-118.249039],"425":["Bellevue","WA",47.618337,-122.205341],"430":["Tyler","TX",32.322885,-95.296265],"432":["Midland","TX",31.992446,-102.080985],"434":["Charlottesville","VA",38.087705,-78.552744],"435":["Saint George","UT",37.13839,-113.629601],"440":["Cleveland","OH",41.489929,-81.671842],"442":["Palm Springs","CA",33.862959,-116.556682],"443":["Baltimore","MD",39.294961,-76.622341],"445":["Philadelphia","PA",40.0018,-75.1179],"447":["Springfield","IL",39.800544,-89.648894],"448":["Tallahassee","FL",30.427618,-84.257753],"458":["Eugene","OR",44.067988,-123.080181],"463":["Indianapolis","IN",39.773669,-86.10956],"464":["Oak Lawn","IL",41.714116,-87.752771],"469":["Dallas","TX",32.788309,-96.799572],"470":["Atlanta","GA",33.8444,-84.4741],"475":["New Haven","CT",41.3082,-72.9282],"478":["Macon","GA",32.806321,-83.61786],"479":["Fayetteville","AR",35.992387,-94.085584],"480":["Mesa","AZ",33.433545,-111.8504],"484":["Allentown","PA",40.603231,-75.469505],"501":["Little Rock","AR",34.747026,-92.280938],"502":["Louisville","KY",38.189,-85.6768],"503":["Portland","OR",45.508551,-122.688283],"504":["New Orleans","LA",29.95609,-90.07735],"505":["Albuquerque","NM",35.096687,-106.643394],"507":["Rochester","MN",44.077657,-92.497063],"508":["Worcester","MA",42.2626,-71.8023],"509":["Spokane","WA",47.662482,-117.436729],"510":["Oakland","CA",37.77576,-122.218572],"512":["Austin","TX",30.3264,-97.7713],"513":["Cincinnati","OH",39.1668,-84.5382],"515":["Des Moines","IA",41.6727,-93.5722],"516":["Hempstead","NY",40.719009,-73.599677],"517":["Lansing","MI",42.7325,-84.5555],"518":["Albany","NY",42.6526,-73.7562],"520":["Tucson","AZ",32.217037,-110.971338],"530":["Redding","CA",40.577176,-122.454715],"531":["Omaha","NE",41.2586,-95.9378],"534":["Eau Claire","WI",44.751984,-91.514998],"539":["Tulsa","OK",36.0391,-95.8687],"540":["Roanoke","VA",37.2742,-79.9579],"541":["Eugene","OR",44.067988,-123.080181],"551":["Jersey City","NJ",40.7328,-74.0755],"559":["Fresno","CA",36.840197,-119.800121],"561":["West Palm Beach","FL",26.715793,-80.066777],"562":["Long Beach","CA",33.767,-118.1892],"563":["Davenport","IA",41.521038,-90.574849],"564":["Seattle","WA",47.610902,-122.336422],"567":["Toledo","OH",41.6639,-83.5552],"570":["Scranton","PA",41.4019,-75.6376],"571":["Alexandria","VA",38.819957,-77.059285],"572":["Oklahoma City","OK",35.4916,-97.5628],"573":["Columbia","MO",38.900945,-92.238427],"574":["South Bend","IN",41.670274,-86.252661],"575":["Las Cruces","NM",32.290212,-106.753138],"580":["Lawton","OK",34.557943,-98.290972],"585":["Rochester","NY",43.286,-77.6843],"586":["Warren","MI",42.515746,-82.982986],"601":["Jackson","MS",32.289606,-90.184324],"602":["Phoenix","AZ",33.4484,-112.074],"603":["Manchester","NH",42.989027,-71.466111],"605":["Sioux Falls","SD",43.5464,-96.6906],"606":["Ashland","KY",38.47752,-82.650548],"607":["Binghamton","NY",42.183203,-75.876048],"608":["Madison","WI",43.0696,-89.4239],"609":["Trenton","NJ",40.2805,-74.712],"610":["Allentown","PA",40.603231,-75.469505],"612":["Minneapolis","MN",44.985367,-93.270208],"614":["Columbus","OH",40.100924,-83.013402],"615":["Nashville","TN",36.166986,-86.77832],"616":["Grand Rapids","MI",42.9842,-85.6291],"617":["Boston","MA",42.355097,-71.065737],"618":["Belleville","IL",38.478277,-89.998032],"619":["San Diego","CA",32.717807,-117.172086],"620":["Hutchinson","KS",37.978238,-97.926522],"623":["Glendale","AZ",33.533729,-112.17854],"626":["Pasadena","CA",34.146771,-118.138922],"628":["San Francisco","CA",37.779562,-122.419293],"629":["Nashville","TN",36.166986,-86.77832],"630":["Naperville","IL",41.764585,-88.144165],"631":["Huntington","NY",40.883412,-73.423563],"636":["Saint Charles","MO",38.858035,-90.463316],"640":["Trenton","NJ",40.2805,-74.712],"641":["Mason City","IA",43.154082,-93.199836],"646":["New York","NY",40.750649,-73.997298],"650":["Palo Alto","CA",37.444218,-122.149855],"651":["Saint Paul","MN",44.950764,-93.087571],"657":["Anaheim","CA",33.844983,-117.952151],"659":["Birmingham","AL",33.5207,-86.8025],"660":["Sedalia","MO",38.699117,-93.221345],"661":["Bakersfield","CA",35.384336,-119.020562],"662":["Tupelo","MS",34.222629,-88.774588],"667":["Baltimore","MD",39.294961,-76.622341],"669":["San Jose","CA",37.3394,-121.895],"678":["Atlanta","GA",33.8444,-84.4741],"681":["Charleston","WV",38.351327,-81.627994],"682":["Fort Worth","TX",32.7714,-97.2915],"689":["Orlando","FL",28.541769,-81.374357],"701":["Fargo","ND",46.92721,-96.834819],"702":["Las Vegas","NV",36.172788,-115.122324],"703":["Alexandria","VA",38.819957,-77.059285],"704":["Charlotte","NC",35.26,-80.8042],"706":["Augusta","GA",33.437213,-81.956156],"707":["Santa Rosa","CA",38.449137,-122.793752],"708":["Oak Lawn","IL",41.714116,-87.752771],"712":["Sioux City","IA",42.493688,-96.394184],"713":["Houston","TX",29.8131,-95.3098],"714":["Anaheim","CA",33.844983,-117.952151],"715":["Wausau","WI",44.966821,-89.709421],"716":["Buffalo","NY",42.89763,-78.887897],"717":["Lancaster","PA",40.072957,-76.313729],"718":["Brooklyn","NY",40.6937,-73.989859],"719":["Colorado Springs","CO",38.8339,-104.8214],"720":["Denver","CO",39.7263,-104.8568],"724":["Pittsburgh","PA",40.482322,-79.9415],"725":["Las Vegas","NV",36.172788,-115.122324],"727":["Saint Petersburg","FL",27.770793,-82.632806],"731":["Jackson","TN",35.588164,-88.853395],"732":["New Brunswick","NJ",40.483638,-74.44246],"734":["Ann Arbor","MI",42.26135,-83.846458],"737":["Austin","TX",30.3264,-97.7713],"740":["Newark","OH",40.110508,-82.378699],"743":["Greensboro","NC",36.070822,-79.767692],"747":["Los Angeles","CA",33.973665,-118.249039],"754":["Fort Lauderdale","FL",26.121323,-80.127909],"757":["Virginia Beach","VA",36.844,-76.1204],"760":["Palm Springs","CA",33.862959,-116.556682],"762":["Augusta","GA",33.437213,-81.956156],"763":["Brooklyn Park","MN",45.564132,-94.121645],"765":["Lafayette","IN",40.417778,-86.889633],"769":["Jackson","MS",32.289606,-90.184324],"770":["Atlanta","GA",33.8444,-84.4741],"772":["Port Saint Lucie","FL",27.297204,-80.29801],"773":["Chicago","IL",41.885155,-87.621512],"774":["Worcester","MA",42.2626,-71.8023],"775":["Reno","NV",39.526024,-119.812624],"779":["Rockford","IL",42.346079,-89.146087],"781":["Waltham","MA",42.40153,-71.252997],"785":["Topeka","KS",39.0483,-95.678],"786":["Miami","FL",25.779764,-80.198763],"801":["Salt Lake City","UT",40.756311,-111.899962],"802":["Burlington","VT",44.475181,-73.217857],"803":["Columbia","SC",33.982478,-81.028094],"804":["Richmond","VA",37.575763,-77.541537],"805":["Santa Barbara","CA",34.419259,-119.708049],"806":["Lubbock","TX",33.586823,-101.851832],"808":["Honolulu","HI",21.3278,-157.8294],"810":["Flint","MI",42.9659,-83.7808],"812":["Bloomington","IN",39.102302,-86.442812],"813":["Tampa","FL",27.9961,-82.582],"814":["Erie","PA",42.121053,-80.089435],"815":["Rockford","IL",42.346079,-89.146087],"816":["Kansas City","MO",39.103468,-94.60061],"817":["Fort Worth","TX",32.7714,-97.2915],"818":["Los Angeles","CA",33.973665,-118.249039],"828":["Asheville","NC",35.594539,-82.557972],"830":["New Braunfels","TX",29.693649,-98.068676],"831":["Salinas","CA",36.647856,-121.630305],"832":["Houston","TX",29.8131,-95.3098],"835":["Allentown","PA",40.603231,-75.469505],"838":["Albany","NY",42.6526,-73.7562],"839":["Columbia","SC",33.982478,-81.028094],"843":["Charleston","SC",32.77718,-79.932],"845":["Poughkeepsie","NY",41.707792,-73.910601],"847":["Schaumburg","IL",42.0334,-88.0834],"848":["New Brunswick","NJ",40.483638,-74.44246],"850":["Tallahassee","FL",30.427618,-84.257753],"854":["Charleston","SC",32.77718,-79.932],"856":["Camden","NJ",39.9259,-75.1196],"857":["Boston","MA",42.355097,-71.065737],"858":["San Diego","CA",32.717807,-117.172086],"859":["Lexington","KY",38.010953,-84.483191],"860":["Hartford","CT",41.7801,-72.6771],"862":["Newark","NJ",40.7361,-74.2251],"863":["Lakeland","FL",28.035979,-81.899636],"864":["Greenville","SC",34.847311,-82.402121],"865":["Knoxville","TN",36.0323,-83.8848],"870":["Jonesboro","AR",35.830646,-90.578121],"872":["Chicago","IL",41.885155,-87.621512],"878":["Pittsburgh","PA",40.482322,-79.9415],"901":["Memphis","TN",35.1693,-89.9904],"903":["Tyler","TX",32.322885,-95.296265],"904":["Jacksonville","FL",30.3375,-81.7686],"906":["Marquette","MI",46.561069,-87.451418],"907":["Anchorage","AK",61.219998,-149.85784],"908":["Elizabeth","NJ",40.671272,-74.177358],"909":["San Bernardino","CA",34.105906,-117.291814],"910":["Fayetteville","NC",35.0748,-78.884257],"912":["Savannah","GA",32.068296,-81.092835],"913":["Overland Park","KS",38.990381,-94.678214],"914":["Yonkers","NY",40.946966,-73.88042],"915":["El Paso","TX",31.759397,-106.480128],"916":["Sacramento","CA",38.5816,-121.4944],"917":["New York","NY",40.750649,-73.997298],"918":["Tulsa","OK",36.0391,-95.8687],"919":["Raleigh","NC",35.773661,-78.634563],"920":["Green Bay","WI",44.480778,-88.016063],"925":["Concord","CA",37.950521,-122.022078],"928":["Flagstaff","AZ",35.357736,-111.771155],"929":["Brooklyn","NY",40.6937,-73.989859],"930":["Bloomington","IN",39.102302,-86.442812],"931":["Clarksville","TN",36.522319,-87.327933],"934":["Huntington","NY",40.883412,-73.423563],"936":["Huntsville","TX",30.807729,-95.558036],"937":["Dayton","OH",39.7505,-84.2686],"938":["Huntsville","AL",34.724611,-86.565541],"940":["Denton","TX",33.220974,-97.146038],"941":["Sarasota","FL",27.335,-82.5372],"945":["Dallas","TX",32.788309,-96.799572],"947":["Troy","MI",42.6061,-83.2976],"948":["Virginia Beach","VA",36.844,-76.1204],"949":["Irvine","CA",33.736498,-117.734933],"951":["Riverside","CA",33.996523,-117.374179],"952":["Bloomington","MN",45.564132,-94.121645],"954":["Fort Lauderdale","FL",26.121323,-80.127909],"956":["McAllen","TX",26.215817,-98.239572],"959":["Hartford","CT",41.7801,-72.6771],"970":["Fort Collins","CO",40.593083,-105.127429],"971":["Portland","OR",45.508551,-122.688283],"972":["Dallas","TX",32.788309,-96.799572],"973":["Newark","NJ",40.7361,-74.2251],"978":["Lowell","MA",42.656045,-71.303309],"979":["Bryan","TX",30.639285,-96.362454],"980":["Charlotte","NC",35.26,-80.8042],"984":["Raleigh","NC",35.773661,-78.634563],"985":["Houma","LA",29.578671,-90.805402],"986":["Boise","ID",43.6038,-116.2729],"989":["Saginaw","MI",43.394997,-83.88928]};
+const ACF_FAC=[["Banyan Alaska","West","4750 Begich Circle, Wasilla, AK 99654",61.605123,-149.422671,"Listed","Substance Use Outpatient; Mental Health Outpatient; Telehealth Virtual IOP","Another Banyan page lists 4701 Begich Circle; verify internally"],["Banyan Boca","South","1000 NW 15th St, Boca Raton, FL 33486",26.347543,-80.114805,"Listed","Mental Health Inpatient; Telehealth Virtual IOP",""],["Banyan Castle Rock","West","1055 S Perry St, Castle Rock, CO 80104",39.302112,-104.819674,"Listed","Substance Use Inpatient; Mental Health Inpatient; Telehealth Virtual IOP",""],["Banyan Chicago","West","2525 Cabot Dr, Lisle, IL 60532",41.789443,-88.083984,"Listed","Substance Use Outpatient; Mental Health Outpatient; Telehealth Virtual IOP","Suite 300"],["Banyan Delaware","Delaware","21 W Clarke Ave, Milford, DE 19963",38.943253,-75.362567,"Listed","Substance Use Inpatient; Substance Use Outpatient; Outpatient Mental Health; Telehealth Virtual IOP","Suite 4001"],["Banyan Gulf Breeze","South","4400 Hickory Shores Blvd, Gulf Breeze, FL 32563",30.390852,-87.024785,"Listed","Substance Use Inpatient; Substance Use Outpatient; Mental Health Outpatient",""],["Banyan Heartland","West","1237 E 1600 North Rd, Gilman, IL 60938",40.772258,-87.984392,"Listed","Substance Use Inpatient; Mental Health Inpatient; Telehealth Virtual IOP",""],["Banyan Palm Springs","West","67580 Jones Rd, Cathedral City, CA 92234",33.814131,-116.465548,"Listed","Substance Use Inpatient; Telehealth Virtual IOP",""],["Banyan Philadelphia","North","100 N Bucks Town Dr, Langhorne, PA 19047",40.180448,-74.912451,"Listed","Substance Use Outpatient; Mental Health Outpatient; Telehealth Virtual IOP","Suite 100E"],["Banyan Pompano","South","950 N Federal Hwy, Pompano Beach, FL 33062",26.241077,-80.091233,"Listed","Substance Use Outpatient; Mental Health Outpatient; Telehealth Virtual IOP",""],["Banyan Sebring","South","1062 Lake Sebring Dr, Sebring, FL 33870",27.503346,-81.367739,"Listed","Substance Use Inpatient; Mental Health Inpatient; Telehealth Virtual IOP",""],["Banyan Stuart","South","201 SE Osceola St, Stuart, FL 34994",27.199535,-80.255952,"Listed","Substance Use Inpatient; Telehealth Virtual IOP",""],["Banyan Tampa","South","10800 Temple Terrace, Seminole, FL 33772",27.843593,-82.796683,"Listed","Mental Health Inpatient",""],["Banyan Texas","West","4168 Co Rd 444, Waelder, TX 78959",29.700745,-97.301328,"Listed","Substance Use Inpatient; Substance Use Outpatient; Telehealth Virtual IOP",""],["Behavioral Health of the Palm Beaches","South","7859 Lake Worth Rd, Wellington, FL 33467",26.596362,-80.175602,"Listed","Substance Use Inpatient; Substance Use Outpatient; Mental Health","Website says located in Lake Worth but address says Wellington"],["Clearbrook Pennsylvania","North","1100 E Northampton St, Laurel Run, PA 18706",41.203289,-75.914803,"Listed","Substance Use Inpatient; Substance Use Outpatient; Mental Health Inpatient",""],["Clearbrook Massachusetts","North","83 Hospital Rd, Baldwinville, MA 01436",42.602059,-72.087015,"Listed","Substance Use Inpatient; Mental Health Inpatient",""],["Banyan Treatment Center of the Palm Beaches","South","4020 Lake Worth Road, Lake Worth Beach, FL 33461",26.619,-80.113,"Opening Soon","Medical Detox; Mental Health Inpatient; Telehealth Virtual IOP","Not confirmed open: confirm with admissions"],["Banyan Treatment Center Michigan at Rochester Hills","West","3565 S Adams Rd, Rochester Hills, MI 48309",42.627,-83.202,"Opening Soon","Medical Detox; Substance Use Inpatient","Not confirmed open: confirm with admissions"],["Banyan Treatment Center North Carolina at Lake Norman","South","291 Commercial Drive, Mooresville, NC 28115",35.579,-80.818,"Listed","Medical Detox; Substance Use Inpatient",""]];
+const ACF_PROGRAMS=['All Programs','Medical Detox','Substance Use Inpatient','Substance Use Outpatient','Mental Health Inpatient','Mental Health Outpatient','Telehealth Virtual IOP'];
+/* Finder facility name → search text for the live Facility Directory */
+const ACF_DIR_QUERY={'Banyan Alaska':'Alaska','Banyan Boca':'Boca','Banyan Castle Rock':'Castle Rock','Banyan Chicago':'Chicago','Banyan Delaware':'Delaware','Banyan Gulf Breeze':'Gulf Breeze','Banyan Heartland':'Heartland','Banyan Palm Springs':'Palm Springs','Banyan Philadelphia':'Philadelphia','Banyan Pompano':'Pompano','Banyan Sebring':'Sebring','Banyan Stuart':'Stuart','Banyan Tampa':'Tampa','Banyan Texas':'Texas','Behavioral Health of the Palm Beaches':'BHOPB','Clearbrook Pennsylvania':'Clearbrook PA','Clearbrook Massachusetts':'Clearbrook MA','Banyan Gulf Breeze Outpatient':'Gulf Breeze'};
+let acf={ code:'', type:'Standard', prog:'All Programs' };
+
+function acfShell(){
+  return `
+  <div id="acfRoot">
+    <div class="kcard acf-form">
+      <div class="acf-field">
+        <label for="acfCode">Caller’s area code or phone number</label>
+        <input id="acfCode" inputmode="numeric" autocomplete="off" placeholder="e.g. 717" value="${fdEsc(acf.code)}" oninput="acf.code=this.value;acfRender()" />
+      </div>
+      <div class="acf-field">
+        <label for="acfType">Call type (CTM tag)</label>
+        <select id="acfType" onchange="acf.type=this.value;acfRender()">
+          ${['Standard','Telehealth','Gulf Breeze Outpatient'].map(t=>`<option ${t===acf.type?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="acf-field">
+        <label for="acfProg">Treatment program</label>
+        <select id="acfProg" onchange="acf.prog=this.value;acfRender()">
+          ${ACF_PROGRAMS.map(p=>`<option ${p===acf.prog?'selected':''}>${p}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="acf-status" id="acfStatus" aria-live="polite"></div>
+    <div class="acf-results" id="acfResults"></div>
+  </div>`;
+}
+function acfMount(){ acfRender(); if(window.matchMedia('(min-width: 721px)').matches) setTimeout(()=>{ const i=document.getElementById('acfCode'); if(i) i.focus({preventScroll:true}); },60); }
+
+/* "(717) 555-0100", "+1 717…", "717" → "717" */
+function acfParse(v){
+  let d=String(v||'').replace(/\D/g,'');
+  if(d.length===11 && d[0]==='1') d=d.slice(1);
+  return d.slice(0,3);
+}
+const acfMiles=(la1,lo1,la2,lo2)=>{
+  const r=Math.PI/180, x=Math.sin(la1*r)*Math.sin(la2*r)+Math.cos(la1*r)*Math.cos(la2*r)*Math.cos((lo1-lo2)*r);
+  return Math.round(3958.7613*Math.acos(Math.max(-1,Math.min(1,x)))*10)/10;
+};
+const acfOffers=(progs,p)=>p==='All Programs'||progs.toLowerCase().includes(p.toLowerCase())||(p==='Mental Health Outpatient'&&progs.toLowerCase().includes('outpatient mental health'));
+
+function acfCompute(){
+  const code=acfParse(acf.code);
+  if(!code) return {state:'empty'};
+  if(code.length<3) return {state:'typing',code};
+  const a=ACF_AREA[code];
+  if(!a) return {state:'unmapped',code};
+  const [city,st,lat,lon]=a;
+  const fac=ACF_FAC.map(([name,region,addr,flat,flon,status,progs,notes],i)=>({name,region,addr,status,progs,notes,i,
+      miles:acfMiles(lat,lon,flat,flon), offers:acfOffers(progs,acf.prog)}));
+  const ranked=fac.filter(f=>f.offers).sort((x,y)=>x.miles-y.miles||x.i-y.i);
+  const byName=n=>fac.find(f=>f.name===n);
+  let override=null;
+  if(acf.type==='Telehealth') override={name:'Banyan Telehealth',region:'Special routing',addr:'',status:'',progs:'',notes:'',miles:null,offers:true,
+      guide:'Telehealth tag only. Route as Telehealth, whatever the caller’s area code.'};
+  else if(acf.type==='Gulf Breeze Outpatient') override={name:'Banyan Gulf Breeze Outpatient',region:'South',addr:'',status:'',progs:'',notes:'',miles:null,offers:true,
+      guide:'Specific outpatient line only. Calls tagged Gulf Breeze Outpatient go to Gulf Breeze Outpatient.'};
+  else if(code==='717') override={...byName('Clearbrook Pennsylvania'),guide:'717 area-code override. Clearbrook Pennsylvania is the Projected Facility for 717 callers. Verify the program.'};
+  else if(st==='DE') override={...byName('Banyan Delaware'),guide:'Delaware override. Delaware callers go to Banyan Delaware. Verify the program.'};
+  const rows=override?[override]:ranked.slice(0,3).map(f=>({...f,guide:'Verify program & admissions.'}));
+  return {state:'ok',code,city,st,rows,override:!!override};
+}
+
+function acfRender(){
+  const st=document.getElementById('acfStatus'), out=document.getElementById('acfResults'); if(!st) return;
+  const r=acfCompute();
+  if(r.state==='empty'){ st.innerHTML=''; out.innerHTML=`<div class="kcard acf-empty">Type the caller’s area code, or paste their full phone number.</div>`; icons(); return; }
+  if(r.state==='typing'){ st.innerHTML=''; out.innerHTML=''; return; }
+  if(r.state==='unmapped'){ st.innerHTML=`<span class="badge badge-amber">Area code ${fdEsc(r.code)} not mapped</span> Ask the caller for their city and state, then use the closest facility in the Facility Directory.`; out.innerHTML=''; icons(); return; }
+  st.innerHTML=`<span class="badge badge-green">Matched</span> <b>${fdEsc(r.code)}</b> · ${fdEsc(r.city)}, ${fdEsc(r.st)} <span style="color:var(--text-3)">(representative city; confirm the caller’s actual city and state)</span>`;
+  if(!r.rows.length){ out.innerHTML=`<div class="kcard acf-empty">No facility offers <b>${fdEsc(acf.prog)}</b>. Try “All Programs” or check with admissions.</div>`; icons(); return; }
+  out.innerHTML=r.rows.map((f,k)=>{
+    const top=k===0, soon=/opening soon/i.test(f.status||'');
+    const progs=f.progs?f.progs.split(';').map(p=>p.trim()).map(p=>acf.prog!=='All Programs'&&acfOffers(p,acf.prog)?`<b>${fdEsc(p)}</b>`:fdEsc(p)).join(' · '):'';
+    const q=ACF_DIR_QUERY[f.name];
+    const progMissing=r.override&&f.progs&&!acfOffers(f.progs,acf.prog);
+    return `<div class="kcard acf-card${top?' is-top':''}">
+      <div class="acf-rank">${r.override?'<i data-lucide="corner-up-right" class="w-4 h-4"></i>':k+1}</div>
+      <div><div class="acf-name">${fdEsc(f.name)}</div>${f.addr?`<div class="acf-addr">${fdEsc(f.addr)}</div>`:''}</div>
+      <div class="acf-miles">${f.miles!=null?`${f.miles}<small>miles (straight line)</small>`:''}</div>
+      <div class="acf-meta">
+        ${r.override?'<span class="badge badge-amber">Routing override</span>':''}
+        ${f.region?`<span class="badge badge-gray">Team: ${fdEsc(f.region)}</span>`:''}
+        ${f.status?`<span class="badge ${soon?'badge-amber':'badge-green'}">${fdEsc(f.status)}</span>`:''}
+      </div>
+      ${progs?`<div class="acf-progs">${progs}</div>`:''}
+      <div class="acf-guide${soon||progMissing?' warn':''}"><i data-lucide="${soon||progMissing?'triangle-alert':'info'}"></i><span>${fdEsc(f.guide)}${soon?' This facility isn’t confirmed open yet; confirm with admissions.':''}${progMissing?` The site’s published programs don’t list ${fdEsc(acf.prog)}; confirm with admissions.`:''}${f.notes&&!soon?` Note: ${fdEsc(f.notes)}.`:''}</span></div>
+      ${q?`<div class="acf-actions"><button class="btn btn-ghost" onclick="fdQuery=${fdEsc(JSON.stringify(q))};openArticle('directory')"><i data-lucide="phone" class="w-4 h-4"></i> Numbers & extensions</button></div>`:''}
+    </div>`;
+  }).join('');
+  icons();
+}
 
 /* ---------- EVENTS ---------- */
 document.addEventListener('keydown', e=>{
