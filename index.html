@@ -517,8 +517,8 @@
         <div id="gBtn"></div>
         <div id="authErr" role="alert" style="display:none"></div>
         <div id="demoBox" style="display:none">
-          <div class="text-xs mb-2" style="color:var(--text-3)">Google Sign-In isn't configured for this environment.</div>
-          <button onclick="demoEnter()" class="btn btn-ghost w-full justify-center"><i data-lucide="eye" class="w-4 h-4"></i> Preview in demo mode</button>
+          <div class="text-xs mb-2" style="color:var(--text-3)">Google Sign-In couldn’t load. Check your connection or ask IT whether accounts.google.com is blocked, then try again.</div>
+          <button onclick="location.reload()" class="btn btn-ghost w-full justify-center"><i data-lucide="refresh-cw" class="w-4 h-4"></i> Try again</button>
         </div>
         <div class="kbg-divider"></div>
         <div class="kbg-note">
@@ -607,10 +607,9 @@
           <button onclick="toggleDark()" class="p-2.5 rounded-xl hover:bg-black/5" title="Toggle theme">
             <i data-lucide="moon" id="themeIcon" class="w-[18px] h-[18px]" style="color:var(--text-2)"></i>
           </button>
-          <button onclick="openPanel('notif')" class="relative p-2.5 rounded-xl hover:bg-black/5" title="Notifications">
+          <button onclick="openPanel('notif')" class="relative p-2.5 rounded-xl hover:bg-black/5" title="Campaign updates">
             <i data-lucide="bell" class="w-[18px] h-[18px]" style="color:var(--text-2)"></i>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style="background:var(--green)"></span>
-          </button>
+                      </button>
           <button class="w-9 h-9 rounded-full ml-1 flex items-center justify-center font-data font-700 text-white text-xs shrink-0"
                   style="background:linear-gradient(140deg,var(--green-mid),var(--green-dark))" id="hdrAvatar" title="Maria Reyes">MR</button>
         </div>
@@ -749,8 +748,8 @@ const ARTICLES = [
 
       <h2 id="opening">1. Opening the call</h2>
       ${when('Every call. Set a professional, welcoming first impression.')}
-      ${C.script('Greeting', say('Thank you for calling Banyan Treatment Centers. My name is [Agent Name]. How may I assist you today?'))}
-      ${C.callout('info','Identify as Banyan Customer Service','Per the 11/3/26 update, introduce yourself as part of Banyan Customer Service, not Admissions.')}
+      ${C.script('Greeting', say('Thank you for calling Banyan Treatment Centers Customer Service. My name is [Agent Name]. How may I assist you today?'))}
+      ${C.callout('info','We are Banyan Customer Service','Per the 11/3/26 update, introduce yourself as part of Banyan Customer Service, never as Admissions.')}
       ${C.script('If they explain their concern right away', `${say('Absolutely, I’d be happy to help you with that.')}<br>${say('Of course. Let me see what I can do to assist you.')}<br>${say('Thank you for letting me know. Let me look into this for you.')}`)}
       ${reminders(['Speak clearly and warmly, without sounding rushed.','Let the caller finish explaining before you respond.','Acknowledge the caller before jumping into questions.'])}
 
@@ -769,11 +768,12 @@ const ARTICLES = [
         {label:'Calling for themselves', html:C.script('Say', say('Thank you for reaching out to us. We understand that taking this step can be difficult, and we’re here to help guide you through the process.'))},
         {label:'Asking about availability', html:C.script('Say', say('Let me connect you with our admissions team so they can discuss the available options and provide you with the most appropriate information.'))},
       ])}
-      <h3 class="font-display font-600 text-base mt-5" style="color:var(--text)">If Admissions is busy</h3>
+      <h3 class="font-display font-600 text-base mt-5" style="color:var(--text)">If no admissions specialist is free</h3>
+      ${C.callout('info','First, try to get a specialist','Post in the All Admissions Teams GC and wait for a reaction. If someone responds, park or transfer the call. If no one does, run the mandatory intake questions from <button class="csg-link" onclick="openArticle(\'call-flow\')">Call Flow & Intake</button>, then offer the callback below.')}
       ${C.script('Offer a callback', say('Our admissions team is with other callers right now. We’ll call you back as soon as someone is free, which usually doesn’t take long.'))}
       ${C.script('If they agree', say('Thank you for your understanding. May I please confirm the best contact number to reach you?'))}
       ${C.script('After confirming the number', say('Perfect, thank you! I’ll make sure your callback request is properly communicated to our admissions team.'))}
-      ${reminders(['Show empathy without sounding scripted, and never rush the caller.','Never guarantee admission, treatment availability or a specific callback time.','Confirm the best callback number, then document and communicate the request.'])}
+      ${reminders(['Show empathy without sounding scripted, and never rush the caller.','Never guarantee admission, treatment availability or a specific callback time.','Run the mandatory intake questions, confirm the best callback number, then Chatter the details on the lead.'])}
 
       <h2 id="existing-patient">4. Patient or family member concerns</h2>
       ${when('A family member or patient is asking about someone currently in treatment.')}
@@ -813,9 +813,9 @@ const ARTICLES = [
       ${when('The caller wants an update or is waiting for someone to call them back.')}
       ${C.script('Say', say('I understand you’re following up on a previous request. Let me check the details so I can help determine the next steps.'))}
       ${C.script('If the callback is still pending', say('Based on the information available, your request is still pending with the appropriate team. I’ll make sure the follow-up is properly documented and directed to them.'))}
-      ${C.script('Giving the 24–48 hour timeframe', say('The expected timeframe for a callback is approximately 24 to 48 hours. However, this may depend on the team’s availability and the nature of your request.'))}
+      ${C.script('Giving the 24–48 hour timeframe', say('The expected timeframe for a callback is approximately 24 to 48 business hours. However, this may depend on the team’s availability and the nature of your request.'))}
       ${C.script('If nobody has contacted them', say('I apologize that you haven’t received an update yet. I understand how important this is, especially when you’re waiting for information. Let me make sure we properly communicate your follow-up request.'))}
-      ${reminders(['Acknowledge earlier follow-ups, and never dismiss a caller because a ticket already exists.','Check existing records, then document the concern and next steps accurately.','Never promise a callback time that hasn’t been confirmed.'])}
+      ${reminders(['Acknowledge earlier follow-ups, and never dismiss a caller because a ticket already exists.','Check existing records and tickets first, so you can reference them. Still submit a ticket for this call and give the caller the ticket number.','Never promise a callback time that hasn’t been confirmed.'])}
 
       <h2 id="business">9. Facilities, employees & other contacts</h2>
       ${when('Facility staff, employees, marketing contacts or other business callers.')}
@@ -832,7 +832,7 @@ const ARTICLES = [
 
       <h2 id="voicemail">11. Leaving a voicemail</h2>
       ${when('You return a call and nobody answers.')}
-      ${C.script('Voicemail', say('Hello, this is [Agent Name] calling from Banyan Treatment Centers. We’re returning your call. Please feel free to contact us again at your convenience. Thank you, and have a great day.'))}
+      ${C.script('Voicemail', say('Hello, this is [Agent Name] calling from Banyan Treatment Centers Customer Service. We’re returning your call. Please feel free to contact us again at your convenience. Thank you, and have a great day.'))}
       ${reminders(['Keep it brief and professional, with no sensitive patient information.','Document the attempt and follow the callback procedure.'])}
 
       <h2 id="closing">12. Closing the call</h2>
@@ -879,13 +879,13 @@ const ARTICLES = [
     id:'welcome', cat:'Getting Started', icon:'hand-heart', title:'Welcome & Purpose',
     author:'Admissions Training Manual v2.1', updated:'Jul 28, 2026', read:3,
     tags:['onboarding','purpose','intro','alliance team'],
-    excerpt:'What this hub is, who it serves, and the mindset every admissions call starts with.',
+    excerpt:'What this hub is, who it serves, and the mindset every call starts with.',
     body:()=>`
       ${C.callout('success','Treat every call the same','Never judge a call based on its source. Even a wrong number should leave knowing what we do and how we can help — encourage them to save our number in case they know someone who needs help.')}
       <h2 id="what">What this reference covers</h2>
       <p>This hub consolidates the Admissions Virtual Training Binder and the current v2 protocol documents into one place: the systems used day to day, the levels of care Banyan offers, call-handling standards, the admission workflow from first contact through scheduling, and the Salesforce and compliance rules that govern every lead.</p>
       <h2 id="who">Who it's for</h2>
-      <p>Admissions and Alliance Team agents handling inbound and outbound calls for Banyan Treatment Centers, plus managers and new hires using it as a training and reference tool.</p>
+      <p>Banyan Customer Service (Alliance Team) agents handling inbound and outbound calls for Banyan Treatment Centers, plus managers and new hires using it as a training and reference tool.</p>
       <h2 id="golden">The golden rule of documentation</h2>
       ${C.quote('“If it is not in Salesforce, it didn’t happen.”','Department standard')}
       <p>Every call is logged, and every lead carries an accurate status — never left Open indefinitely without follow-up fields completed.</p>
@@ -900,7 +900,7 @@ const ARTICLES = [
     excerpt:'The three systems every agent lives in: CTM for calls, Salesforce for leads, Outlook & Teams for communication.',
     body:()=>C.tabs('sys',[
       {label:'CTM', html:`
-        <p>CTM (Call Tracking Metrics) is the software used to receive, place, track, and record all admissions calls.</p>
+        <p>CTM (Call Tracking Metrics) is the software used to receive, place, track, and record all calls.</p>
         ${C.checklist(['Linked to Salesforce — generates a file for every call received.','Shows the lead source for each incoming call and flags repeat callers.','Supports sending and receiving text messages with potential patients.','QA uses CTM to review how calls were handled and guide coaching.'])}
         ${C.callout('info','Login','https://app.calltrackingmetrics.com/login')}`},
       {label:'Salesforce', html:`
@@ -949,6 +949,13 @@ const ARTICLES = [
         ['F/U','Follow Up','IOP','Intensive Outpatient'],
         ['IP','Inpatient','LOC','Level of Care'],
         ['LOS','Length of Stay','LVM','Left Voice Mail'],
+        ['ADON','Assistant Director of Nursing','BD / BDO','Business Development (referral partners)'],
+        ['CD','Clinical Director','CM','Case Manager'],
+        ['DON','Director of Nursing','DOO','Director of Operations'],
+        ['ED','Executive Director','GC','Group Chat (Microsoft Teams)'],
+        ['MAT','Medication-Assisted Treatment','NSOPW','National Sex Offender Public Website'],
+        ['PAA','Pre-Admission Assessment','RN','Registered Nurse'],
+        ['TH','Telehealth','Park','Hold the call in CTM so a specialist can pick it up'],
       ])}
     `,
   },
@@ -985,7 +992,7 @@ const ARTICLES = [
         ['<b>Private Pay</b>','Typically ~$1,000/day — continue the call.'],
         ['<b>State Funded (Medicaid / Medicare)</b>','We are unable to work with these for direct billing. Ask if they can self-pay (avg $7,000–$30,000 depending on length of stay / level of care), or if they’ve served in the armed forces (dedicated Veterans team). If neither applies, offer SAMHSA: <b>800-662-4357</b>.'],
       ])}
-      ${C.callout('warn','Medicaid acceptance is state-specific','Medicaid <b>is</b> accepted in some states — Florida, Alaska, Delaware, Massachusetts, and Colorado (per this directory). Everywhere else, it is not accepted for direct billing: route to the self-pay or Veterans pathway first, and only after both are ruled out do you provide the SAMHSA National Helpline.')}
+      ${C.callout('warn','Before telling anyone Medicaid is accepted, check with a supervisor','The standing rule is that Medicaid/Medicare is not accepted for direct billing. An older version of the facility directory listed Florida, Alaska, Delaware, Massachusetts and Colorado as states where Medicaid is accepted, but this hasn’t been confirmed. Follow the table above unless a supervisor confirms otherwise.')}
     `,
   },
   {
@@ -995,12 +1002,12 @@ const ARTICLES = [
     excerpt:'When a caller asks about a specific patient, the HIPAA spiel comes first — every time.',
     body:()=>`
       ${C.callout('danger','Deliver the HIPAA spiel first, regardless of outcome','You may never confirm or deny whether a named individual is in our care.')}
-      ${C.script('Standard HIPAA language', `<span class="say">“I can neither confirm nor deny anyone’s presence due to HIPAA.”</span>`)}
+      ${C.script('Standard HIPAA language', `<span class="say">“We cannot confirm or deny someone’s presence or information due to HIPAA Law.”</span>`)}
       <h2 id="paths">Then route</h2>
       ${C.timeline([
-        {t:'If the patient is with Banyan', d:'Clarify which facility they are admitted to before routing further. If they have the facility name, offer to transfer; they may need to leave a voicemail.'},
-        {t:'If contact still can’t be made', d:'Offer to email the facility on the caller’s behalf — clarify Admissions is not onsite and this is the extent of assistance available.'},
-        {t:'If the patient is NOT with Banyan', d:'Treat as a wrong number and provide additional resources as appropriate.'},
+        {t:'Ask which facility their loved one is at', d:'Don’t confirm anything yourself. If the caller names a Banyan facility, give that facility’s number, offer to transfer, and create a Talk to Patient ticket. Give them the ticket number, and let them know the call may come back to us if no one answers.'},
+        {t:'If contact still can’t be made', d:'Offer to email the facility on the caller’s behalf. Make clear our team is not onsite and this is the extent of assistance available. They can also wait for the patient to reach out to their emergency contact.'},
+        {t:'If the facility isn’t a Banyan facility', d:'Treat as a wrong number and provide additional resources as appropriate.'},
       ])}
       ${C.callout('warn','A signed release is required','No facility staff may discuss a specific patient with a caller until a signed release is on file. Calls are confidential — we do not notify employers.')}
     `,
@@ -1013,14 +1020,15 @@ const ARTICLES = [
     body:()=>`
       <p>Facility-related calls cover: a request for a specific department, medical records requests, looking for belongings, prescription requests, and hospital referrals.</p>
       ${C.timeline([
-        {t:'Gather info and create a ticket', d:'Collect the caller’s information.'},
-        {t:'Provide the specific location', d:'Based on the patient’s projected facility.'},
-        {t:'Set expectations', d:'Inform the caller that someone from the facility will call within 24–48 hours. Park the call if a live transfer or additional handling is required.'},
+        {t:'Gather info and create a ticket', d:'Collect the caller’s information and submit a ticket for every facility call, even if you also transfer. Give the caller the ticket number.'},
+        {t:'Tell them which facility handles it', d:'Give the caller the facility name and number that matches the patient’s projected facility (see the Facility Directory).'},
+        {t:'Set expectations', d:'Tell the caller someone from the facility will respond within 24–48 business hours. Park the call if a specialist needs to pick it up live.'},
       ])}
+      ${C.callout('warn','Medical records calls are different','Give the medical records website from the pop-up. Only create a ticket if they need someone from Medical Records to contact them. Urgent, or longer than 7 business days → warm transfer to Vivienne at 954-758-4142.')}
       <h2 id="direct">Speaking with someone at a facility (SOP-BAN-08)</h2>
-      ${C.checklist(['Provide the caller with the facility’s phone number and transfer the call to the facility.'])}
-      ${C.callout('warn','Repeat / bounce-back callers','If the caller bounces back or calls multiple times, post in the “All Admissions Teams Chat” with: intended facility name/location, caller name, callback number, reason for the call (client first name + last initial if applicable), and any pertinent details (e.g. number of attempts, threats to involve police).')}
-      ${C.callout('danger','Admissions questions must be transferred','Never answer admissions questions yourself or relay them via group chat. Any question about beds, conditions treated, couples, insurance acceptance, or transport must go to an admissions rep. If none is available, advise a callback and notify the team.')}
+      ${C.checklist(['Give the caller the facility’s phone number, then transfer the call to the facility.','Before transferring, tell them the call may come back to us if no one at the facility answers (all sites except Lake Worth and Seminole), and give them their ticket number.','If you transfer to a specific extension, the call won’t come back; it goes to that extension’s voicemail if no one answers.'])}
+      ${C.callout('warn','If the call comes back, or they call again','Apologize, explain that no one was available at the facility, give them their ticket number, and let them know the facility will respond within 24–48 business hours. If they say it’s urgent, submit a second ticket with <b>ESCALATION URGENT REQUEST</b> typed in the description.')}
+      ${C.callout('danger','Admissions questions must go to an admissions rep','Never answer admissions questions yourself (beds, conditions treated, couples, insurance acceptance, transport). Use the All Admissions Teams GC only to get a specialist on the line, not to pass along the caller’s questions. If none is available, run the mandatory intake questions and advise a callback (see Call Flow & Intake).')}
     `,
   },
   {
@@ -1031,12 +1039,13 @@ const ARTICLES = [
     body:()=>`
       ${C.callout('info','If a call drops, call them back','If a call drops, you can’t hear them, or anything indicates the call didn’t start or finish properly — call them back.')}
       <h2 id="cb">Missed-caller callbacks (SOP §2.2)</h2>
+      ${C.callout('warn','Skip the callback when','The missed call is labeled TH/Telehealth in CTM (e.g. “th intake,” “telehealth case management,” “telehealth”), or the caller already spoke with one of our reps. For the second case, complete the four follow-up fields instead.')}
       ${C.callout('danger','Do NOT create a lead for a missed caller who does not answer','A lead is only created when there is someone to follow up with.')}
       ${C.table(['Scenario','What to do'],[
-        ['<b>No answer / voicemail</b> — lead exists','Log a call and disposition it.'],
+        ['<b>No answer / voicemail</b> — lead exists','Log a call. Don’t close the lead: leave it Open with the four follow-up fields completed (7/24/26 update).'],
         ['<b>No answer / voicemail</b> — no lead','Do NOT create one — it is not needed.'],
-        ['<b>Answers</b> — lead exists','Log a call, set Lead Priority to “Needs VOB,” fill in Projected Facility, and try to get an admissions rep on the line by noting it in the Admissions GC.'],
-        ['<b>Answers</b> — no lead','Create a lead, log a call, set Lead Priority to “Needs VOB,” fill in Projected Facility, and try to get an admissions rep on the line via the Admissions GC.'],
+        ['<b>Answers</b> — lead exists','Log a call, complete the four follow-up fields (Team, Lead Status Open, Lead Priority “Needs VOB,” Projected Facility), and try to get an admissions rep on the line through the All Admissions Teams GC.'],
+        ['<b>Answers</b> — no lead','Create a lead, log a call, complete the four follow-up fields, and try to get an admissions rep on the line through the All Admissions Teams GC.'],
       ])}
     `,
   },
@@ -1046,15 +1055,16 @@ const ARTICLES = [
     tags:['process map','routing','triage','flow','diagram','facility'],
     excerpt:'How a facility call is triaged once the caller’s need is identified.',
     body:()=>`
-      <p>This map shows how a <b>facility call</b> is triaged once the caller’s need is identified. Every facility call routes to one of three paths — searching for a loved one in care, a facility service request (a specific department, medical records, belongings, or a prescription), or a hospital referral. Aside from a call parked for a live specialist, each path ends by gathering the caller’s information, creating a ticket, and setting the 24–48 hour callback expectation.</p>
+      <p>This map shows how a <b>facility call</b> is triaged once the caller’s need is identified. Every facility call routes to one of three paths — searching for a loved one in care, a facility service request (a specific department, medical records, belongings, or a prescription), or a hospital referral. Aside from a call parked for a live specialist, each path ends by gathering the caller’s information, creating a ticket, and setting the 24–48 business hour callback expectation.</p>
       <figure class="my-5">
         <img src="${PMAP_IMG}" alt="Banyan facility call routing flow chart" class="w-full rounded-xl border" style="border-color:var(--line);background:#fff" />
         <figcaption class="text-xs mt-2 text-center" style="color:var(--text-3)">Banyan Facility Call Flow</figcaption>
       </figure>
       <h2 id="loved">Searching for a loved one</h2>
-      ${C.checklist(['First confirm whether the patient is with Banyan.','If yes: deliver the HIPAA spiel, provide the specific Banyan location based on the patient’s projected facility, then gather information and create a ticket.','If no: clarify which facility the patient is admitted to — if they are not with Banyan, treat it as a wrong number and provide additional resources.'])}
+      ${C.checklist(['Deliver the HIPAA line first. Never confirm or deny that the person is a patient.','Ask which facility their loved one is at. If the caller names a Banyan facility, give that facility’s number, offer to transfer, and create a ticket.','If the facility they name isn’t a Banyan facility, treat it as a wrong number and provide additional resources.'])}
       <h2 id="facility">Facility service requests</h2>
-      ${C.checklist(['Covers a request for a specific department, a medical records request, looking for belongings, and prescription requests.','Gather the caller’s information and create a ticket.','Inform the caller that someone from the facility will call within 24–48 hours.'])}
+      ${C.checklist(['Covers a request for a specific department, a medical records request, looking for belongings, and prescription requests.','Gather the caller’s information, create a ticket and give them the ticket number.','Tell the caller someone from the facility will respond within 24–48 business hours.'])}
+      ${C.callout('warn','Medical records: website first','The chart above predates the new process. Give the website from the pop-up, and only create a ticket if they need Medical Records to contact them. Urgent, or longer than 7 business days → warm transfer to Vivienne at 954-758-4142.')}
       <h2 id="admission">Hospital referral</h2>
       ${C.checklist(['Check whether an admission specialist is available.','If yes: park the call and transfer it to the specialist.','If no: advise the caller of a call back, then gather their information and create a ticket.'])}
     `,
@@ -1120,8 +1130,9 @@ const ARTICLES = [
         ['<span class="badge badge-green">North</span>','Clearbrook PA, Clearbrook Mass, Banyan Philadelphia (“Philly”)'],
         ['<span class="badge badge-blue">South</span>','Gulf Breeze, BHOPB (Lake Worth), Sebring, Stuart, Boca, Pompano, Tampa*'],
         ['<span class="badge badge-amber">West</span>','Palm Springs, Texas, Heartland, Chicago, Alaska, Castle Rock'],
+        ['<span class="badge badge-gray">Not assigned</span>','Delaware — ask your supervisor which Team to use until this is confirmed.'],
       ])}
-      ${C.callout('warn','* Tampa is a newer program','Limited information is available. For now, Tampa requires a callback from one of our agents rather than a direct transfer. Confirm current guidance with the team before handling.')}
+      ${C.callout('warn','* Tampa (Seminole) is a newer program','Tampa calls can be transferred using the numbers in the Facility Directory. Tampa is on a different phone system, so if no one answers, the call won’t come back to you. Always create a ticket and give the caller the ticket number.')}
       ${C.callout('info','Projected Facility drives the region','Choose the Projected Facility based on the campaign/helpline and/or the area code and the closest facility — the Team (Region) follows from it.')}
     `,
   },
@@ -1147,7 +1158,7 @@ const ARTICLES = [
         <div class="text-xs font-700 uppercase tracking-wide mb-2" style="color:var(--green)">SOP-BAN-02</div>
         ${C.timeline([
           {t:'Open Leads', d:'From the Service Console, click the dropdown next to “Home” and select Leads, then click New.'},
-          {t:'Quick Ref Out Information', d:'Enter Patient Name (required) and Caller Name/Last Name (required). Leave Lead Status as Open initially, then change to Working or Closed based on outcome — never leave it Open.'},
+          {t:'Quick Ref Out Information', d:'Enter Patient Name (required) and Caller Name/Last Name (required). Lead Status starts as Open. Close it only when a closed reason applies (Customer Service, Wrong Number / Spam, or Medicaid / Medicare / Unable to Self-Pay). If it stays Open, complete the four follow-up fields (see Required Fields for Open Leads).'},
           {t:'Lead Information', d:'Complete “How did you hear about us?” and check Re-Admit if the client has been with Banyan before.'},
           {t:'Patient Information', d:'Fill in every field you can — birth gender, gender identity, DOB, address.'},
           {t:'Sex Offender Registry check', d:'Check the client on the National Sex Offender Public Website using name + DOB. Required for every patient. A match is generally an automatic close/disqualified lead for in-person care — escalate to a supervisor.'},
@@ -1210,7 +1221,7 @@ const ARTICLES = [
     body:()=>`
       <h2 id="status">Lead Status</h2>
       ${C.table(['Status','When to use'],[
-        ['<span class="badge badge-green">Open</span>','Auto-populated when a lead opens; used while actively working the lead.'],
+        ['<span class="badge badge-green">Open</span>','Auto-populated when a lead opens. A lead that still needs follow-up stays Open, with all four follow-up fields completed.'],
         ['<span class="badge badge-gray">Closed</span>','Used when we are no longer following up on the file.'],
       ])}
       <h2 id="closed">Closed reasons</h2>
@@ -1242,7 +1253,7 @@ const ARTICLES = [
     excerpt:'The four fields any Open lead must carry so it can be followed up.',
     body:()=>`
       ${C.timeline([
-        {t:'Lead Status', d:'Set appropriately — never left Open indefinitely without the fields below.'},
+        {t:'Lead Status', d:'Stays Open while the lead needs follow-up.'},
         {t:'Lead Priority', d:'“Needs VOB” is the only priority you enter.'},
         {t:'Team (Region)', d:'Based on the Projected Facility selected.'},
         {t:'Projected Facility', d:'Based on the campaign/helpline and/or the area code and the closest facility.'},
@@ -1256,7 +1267,7 @@ const ARTICLES = [
     id:'policies', cat:'Compliance', icon:'scroll-text', title:'Policies & Guidelines',
     author:'Policies & Guidelines v2.0', updated:'Jul 28, 2026', read:5,
     tags:['policy','non-discrimination','confidentiality','documentation','escalation'],
-    excerpt:'The eight standing policies every admissions agent operates under.',
+    excerpt:'The eight standing policies every agent operates under.',
     body:()=>`
       ${C.callout('warn','Highly Confidential — Not for Distribution','Applies to Banyan Agents · Version 2.0')}
       ${C.timeline([
@@ -1265,7 +1276,7 @@ const ARTICLES = [
         {t:'3 · Scope of care', d:'Adults 18+ only; adolescents route to the Refer Out Team. We do not provide Hospitalization / Involuntary Hold — active suicidality follows crisis-response protocol.'},
         {t:'4 · Insurance & payment', d:'Private insurance and private pay proceed normally. Medicaid/Medicare not accepted for direct billing — offer self-pay, Veterans pathway, or SAMHSA (800-662-4357).'},
         {t:'5 · Sex Offender Registry check', d:'Every patient checked on NSOPW at file build. Cannot accept registrants for in-person care; telehealth only when detox/residential not clinically required. A match is generally an automatic close — escalate.'},
-        {t:'6 · Documentation standard', d:'All activity logged in Salesforce — “If it’s not in Salesforce, it didn’t happen.” Lead Status is never left Open indefinitely.'},
+        {t:'6 · Documentation standard', d:'All activity logged in Salesforce — “If it’s not in Salesforce, it didn’t happen.” An Open lead always has its four follow-up fields completed.'},
         {t:'7 · Veteran & First Responder ID', d:'Check the corresponding field and reference it when tagging the appropriate team in Chatter so specialized pathways engage.'},
         {t:'8 · Escalation', d:'When policy application is unclear, escalate to a supervisor rather than making a unilateral judgment call.'},
       ])}
@@ -1278,9 +1289,9 @@ const ARTICLES = [
     excerpt:'The non-negotiables: never confirm or deny, always require a release, keep calls confidential.',
     body:()=>`
       ${C.callout('danger','Never confirm or deny a named individual is in our care','This applies to spouses, employers, hospitals — anyone, without a signed release on file.')}
-      ${C.script('Standard language', `<span class="say">“I can neither confirm nor deny anyone’s presence due to HIPAA.”</span>`)}
+      ${C.script('Standard language', `<span class="say">“We cannot confirm or deny someone’s presence or information due to HIPAA Law.”</span>`)}
       <h2 id="rules">The rules</h2>
-      ${C.checklist(['If the caller has the facility name, you may transfer them; they may need to leave a voicemail.','If they still can’t get an answer, you may offer to email the facility on their behalf — make clear Admissions is not onsite and this is the extent of assistance.','A signed release is required before any facility staff discuss a specific patient.','Employer notification: calls are confidential — we do not notify employers.'])}
+      ${C.checklist(['If the caller has the facility name, you may transfer them; they may need to leave a voicemail.','If they still can’t get an answer, you may offer to email the facility on their behalf — make clear our team is not onsite and this is the extent of assistance.','A signed release is required before any facility staff discuss a specific patient.','Employer notification: calls are confidential — we do not notify employers.'])}
     `,
   },
   {
@@ -1321,7 +1332,7 @@ const ARTICLES = [
     body:()=>`
       ${C.callout('info','Escalate rather than guess','When policy application is unclear, escalate to a supervisor rather than making a unilateral judgment call.')}
       <h2 id="when">Common triggers</h2>
-      ${C.checklist(['A sex-offender registry match.','An ambiguous level-of-care request.','A repeated facility-transfer call.','Any threatening or abusive caller (report to your manager immediately).','Active suicidality or a psychiatric safety risk — follow crisis-response protocol.'])}
+      ${C.checklist(['A sex-offender registry match.','An ambiguous level-of-care request.','A facility caller who says it’s urgent: submit a second ticket with ESCALATION URGENT REQUEST in the description.','Any threatening or abusive caller (report to your manager immediately).','Active suicidality or a psychiatric safety risk — follow crisis-response protocol.'])}
     `,
   },
 
@@ -1332,7 +1343,7 @@ const ARTICLES = [
     tags:['faq','sensitive','medicaid','suicidal','methadone','threats','beds'],
     excerpt:'The trickiest questions, with the approved answer from policy.',
     faq:[
-      {q:"Someone asks whether a specific person is a patient here.", a:"“I can neither confirm nor deny anyone’s presence due to HIPAA.” Deliver this first, every time. A signed release is required before any facility staff can discuss a specific patient, and we never notify employers."},
+      {q:"Someone asks whether a specific person is a patient here.", a:"“We cannot confirm or deny someone’s presence or information due to HIPAA Law.” Deliver this first, every time. A signed release is required before any facility staff can discuss a specific patient, and we never notify employers."},
       {q:"The caller has Medicaid or Medicare.", a:"We cannot work with state-funded insurance for direct billing. Ask if they can self-pay (avg $7,000–$30,000 depending on length of stay / level of care) or whether they’ve served in the armed forces (dedicated Veterans team). If neither applies, provide the SAMHSA National Helpline: 800-662-4357."},
       {q:"The call is about an adolescent (under 18).", a:"Banyan treats adults 18 and older only. Calls involving an adolescent patient must be routed to the Refer Out Team."},
       {q:"The caller is actively suicidal or a psychiatric safety risk.", a:"We do not provide Hospitalization / Involuntary Hold. Do not run standard admission triage — handle per crisis-response protocol and escalate to a supervisor."},
@@ -1352,26 +1363,27 @@ const ARTICLES = [
     body:()=>`
       ${C.callout('success','Your role','Qualify callers properly and ask the mandatory intake questions. Mirror what the caller says, confirm it back, and provide empathy where needed.')}
       <h2 id="opening">I · Opening spiel</h2>
-      ${C.script('Opening', `<span class="say">“Banyan, this is [agent’s name], how can I help?”</span><br><span class="say">“Banyan, this is [agent’s name] — are you seeking treatment for yourself or a loved one?”</span>`)}
+      ${C.script('Opening', `<span class="say">“Thank you for calling Banyan Treatment Centers Customer Service. My name is [Agent Name]. How may I assist you today?”</span>`)}
+      ${C.callout('info','We are Banyan Customer Service','Never introduce yourself as Admissions (11/3/26 update). More openings for different situations are in the <button class="csg-link" onclick="openArticle(\'cs-call-guide\')">Customer Service Call Guide</button>.')}
       <h2 id="reason">II · Call reason</h2>
       ${C.checklist(['The client/patient tells you why they are calling; the caller tells you what they need.','Mirror it back — paraphrase to confirm what the caller said.','Provide empathy if needed.'])}
       <h2 id="resolution">III · Call resolution — admission call</h2>
       ${C.timeline([
         {t:'Check the Salesforce lead', d:'Find the active or most recent lead and verify the name and DOB.'},
-        {t:'Notify an Admission Specialist', d:'Post in the All Admission Teams GC (Microsoft Teams) using the template: Greetings, name of the client, Lead ID, call reason.'},
-        {t:'Wait for a reaction, then hand off', d:'Once the specialist responds/reacts to your message, park or transfer the call.'},
+        {t:'Notify an Admission Specialist', d:'Post in the All Admissions Teams GC (Microsoft Teams) using the template: Greetings, name of the client, Lead ID, call reason.'},
+        {t:'Wait for a reaction, then hand off', d:'Once the specialist responds/reacts to your message, park the call (hold it in CTM for the specialist to pick up) or transfer it to them directly.'},
         {t:'No specialist available?', d:'Run the mandatory intake questions below, then advise the client of a callback and Chatter the information on the active lead.'},
       ])}
       ${C.script('Mandatory intake questions  🚩 PLEASE CALL BACK ASAP', `CALLER NAME:<br>PATIENT NAME:<br>STRUGGLING WITH:<br>DOB:<br>CB#:<br>INSURANCE COMPANY:<br>POLICY #:<br>IS CLIENT A SEX OFFENDER?:<br>IS CLIENT CURRENTLY ON MAT / METHADONE:<br>HOW DID YOU HEAR ABOUT US?:`)}
       <h2 id="facility">III · Call resolution — facility call</h2>
-      ${C.callout('danger','Standard HIPAA law','When anyone — family, partner, son/daughter, or a professional — is looking for a client/patient, always give: “We cannot confirm or deny someone’s presence or information due to HIPAA Law.” Then refer it to the ticketing system.')}
+      ${C.callout('danger','Standard HIPAA law','When anyone — family, partner, son/daughter, or a professional — is looking for a client/patient, always give: “We cannot confirm or deny someone’s presence or information due to HIPAA Law.” Then follow Searching for a Loved One and create a ticket.')}
       ${C.checklist(['If it is not a facility-related call, provide the number from the Facility Directory (e.g. someone asking for HR → give the HR number).'])}
       <h2 id="end">IV · End the call</h2>
-      ${C.script('Closing', `<span class="say">“Thank you for calling us. Have a great day.”</span><br><span class="say">“Thank you for calling us. Be safe.”</span>`)}
+      ${C.script('Closing', `<span class="say">“Before we end the call, is there anything else I can assist you with today?”</span><br><span class="say">“Thank you for calling Banyan Treatment Centers. Take care, and have a great day!”</span>`)}
       <h2 id="samples">Sample call flows</h2>
       ${['<b>Admission — specialist available.</b> Caller: “Are there any beds available?” Agent: “So you’re looking for available beds — are you seeking help for drugs, alcohol, or mental health?” Caller: “Mental health that leads to drug abuse.” Agent: “I’m really sorry to hear that, and it’s good you’re seeking help. Stay on the line with me — I’ll connect you to our caring specialist.”',
-        '<b>Admission — no specialist available.</b> After the same opening, once no specialist is free: “Thank you for patiently waiting. All our specialists are still engaged. I’m going to gather some basic information — let’s start with your name.” Run the mandatory intake questions, then follow up with the All Admission GC, and tell the caller you’ll double-check for an available specialist and place them on a brief hold.',
-        '<b>Facility — looking for a loved one.</b> Caller: “I’m looking for my wife.” Agent: “It must be hard right now. A heads-up that we cannot confirm or deny someone’s presence due to HIPAA Law. May I know the facility she’s admitted to?” Then guide them to wait for the client to make contact with their emergency contact.',
+        '<b>Admission — no specialist available.</b> After the same opening, once no specialist is free: “Thank you for patiently waiting. All our specialists are still engaged. I’m going to gather some basic information — let’s start with your name.” Run the mandatory intake questions, then follow up in the All Admissions Teams GC, and tell the caller you’ll double-check for an available specialist and place them on a brief hold.',
+        '<b>Facility — looking for a loved one.</b> Caller: “I’m looking for my wife.” Agent: “It must be hard right now. A heads-up that we cannot confirm or deny someone’s presence or information due to HIPAA Law. May I know the facility she’s admitted to?” If they name a Banyan facility, give its number, offer to transfer, and create a ticket. Otherwise, let them know their loved one can reach out to their emergency contact.',
         '<b>Facility — not treatment related.</b> Caller: “Can you transfer me to HR for employment verification?” Agent: “Just to confirm — you want HR for employment verification? Here’s the number: 954-533-7705 Option 3. Kindly dial them after this call.”'
       ].map(s=>`<div class="acc-item" data-acc><button class="acc-head" onclick="toggleAcc(this)"><span>${s.split('.</b>')[0].replace('<b>','')}</span><i data-lucide="chevron-down" class="w-5 h-5"></i></button><div class="acc-body"><div class="acc-body-inner">${s}</div></div></div>`).join('')}
     `,
@@ -1382,7 +1394,8 @@ const ARTICLES = [
     tags:['ticket','power apps','facility','belongings','medical records','prescription','timeframe'],
     excerpt:'For facility calls: submit a New Ticket Creation Form, set expectations, and follow the response time frames.',
     body:()=>`
-      ${C.callout('info','Facility calls only','If a facility call matches one of the ticket reasons below, gather everything needed and submit a ticket in the Banyan New Ticket Creation Form (Power Apps). All fields marked * are required.')}
+      ${C.callout('info','Submit a ticket for every facility call','Submit a ticket in the Banyan New Ticket Creation Form (Power Apps) for every facility call, even when you also transfer the caller (8/3/26 update). Give the caller the ticket number. All fields marked * are required.')}
+      ${C.callout('warn','Exception: medical records','Give the caller the medical records website from the pop-up. Only submit a ticket if they need someone from Medical Records to contact them. If it’s urgent or has taken longer than 7 business days, warm transfer to Vivienne at 954-758-4142.')}
       <h2 id="form">New Ticket Creation Form</h2>
       ${C.table(['Section','Fields'],[
         ['Reason','Reason * (dropdown — see list below)'],
@@ -1392,20 +1405,20 @@ const ARTICLES = [
       ])}
       <h2 id="reasons">Reasons & response time frames</h2>
       ${C.table(['Call reason','Response time frame'],[
-        ['Belongings / Personal Items','24–48 hours'],
+        ['Belongings / Personal Items','24–48 business hours'],
         ['Completion Letters','Up to 14 business days'],
-        ['Insurance Billing','24–48 hours'],
-        ['Law Enforcement / Probation','24–48 hours'],
-        ['Legal / Compliance','24–48 hours'],
-        ['Medical Records','Up to 14 business days'],
-        ['Payment / Billing Issue','24–48 hours'],
-        ['Prescription Request','24–48 hours'],
-        ['Talk to Patient','24–48 hours'],
-        ['Talk to Treatment Team','24–48 hours'],
+        ['Insurance Billing','24–48 business hours'],
+        ['Law Enforcement / Probation','24–48 business hours'],
+        ['Legal / Compliance','24–48 business hours'],
+        ['Medical Records','Up to 7 business days (give the website first; see above)'],
+        ['Payment / Billing Issue','24–48 business hours'],
+        ['Prescription Request','24–48 business hours'],
+        ['Talk to Patient','24–48 business hours'],
+        ['Talk to Treatment Team','24–48 business hours'],
         ['Other','—'],
       ])}
       <h2 id="spiel">Ticket spiel</h2>
-      ${C.script('Sample spiel', `<span class="say">“Since you’re calling in regards to [reason — relate it to a dropdown option], I’ll be more than happy to submit a ticket for you. Please keep your lines open for a call back from our Facility Team — this might take up to 24–48 hours.”</span>`)}
+      ${C.script('Sample spiel', `<span class="say">“Since you’re calling in regards to [reason — relate it to a dropdown option], I’ll be more than happy to submit a ticket for you. Your ticket number is [ticket number]. Please keep your lines open for a call back from our Facility Team — this might take up to 24–48 business hours.”</span>`)}
       ${C.callout('danger','Always lead with HIPAA when someone is looking for a client/patient','“We cannot confirm or deny someone’s presence or information due to HIPAA Law.”')}
     `,
   },
@@ -1417,9 +1430,8 @@ const ARTICLES = [
     excerpt:'Numbers, transfer instructions and department extensions for every facility, live from the Facility Directory sheet.',
     body:()=>`
       ${fdShell()}
-      <h2 id="medicaid">Medicaid acceptance</h2>
-      ${C.callout('success','States where Medicaid is accepted','Florida, Alaska, Delaware, Massachusetts, and Colorado (per this directory).')}
-      ${C.callout('warn','Cross-check the payment policy','The Policies & Guidelines document states Medicaid/Medicare is not accepted for direct billing. Acceptance is state-specific — confirm the current standing rule with a supervisor before advising a caller. See Insurance & Payment Policy.')}
+      <h2 id="medicaid">Medicaid</h2>
+      ${C.callout('warn','Medicaid/Medicare is not accepted for direct billing','Offer self-pay, the Veterans pathway, or SAMHSA (800-662-4357), as in Asking About Insurance. If a caller says their state’s Medicaid is accepted at a facility, check with a supervisor before telling them anything.')}
       ${C.callout('info','Main corporate line','954-533-7705 — extensions vary by department. See Key Phone Numbers.')}
     `,
   },
@@ -1448,7 +1460,8 @@ const ARTICLES = [
       ])}
       <h2 id="records">Records</h2>
       ${C.table(['Line','Number'],[
-        ['Medical Records','954-533-7705 Ext. 140'],
+        ['Medical Records (main line)','954-533-7705 Ext. 140'],
+        ['Medical Records: urgent or over 7 business days only (Vivienne, warm transfer)','954-758-4142'],
         ['Fax — Medical Records / Admissions','954-944-2931'],
       ])}
       <h2 id="finance">Finance & billing</h2>
@@ -1457,6 +1470,7 @@ const ARTICLES = [
         ['Buck Billing','954-495-5146'],
         ['Insurance Comp','954-533-7705 Ext. 135'],
         ['Insurance Comp (alt.)','954-533-7705 Ext. 134'],
+        ['New Leaf Billing (all calls from insurance companies)','<i>Number not provided yet; ask your supervisor</i>'],
       ])}
       <h2 id="hr">HR & legal</h2>
       ${C.table(['Line','Number'],[
@@ -1482,6 +1496,7 @@ const NAV = [
   ]},
   {section:'Call Handling', items:[
     {id:'article:cs-call-guide', label:'Customer Service Call Guide', icon:'headset'},
+    {id:'article:need-to-know', label:'What We Need to Know', icon:'list-checks'},
     {id:'article:call-flow', label:'Call Flow & Intake', icon:'workflow'},
     {id:'article:insurance-questions', label:'Asking About Insurance', icon:'shield-check'},
     {id:'article:loved-one', label:'Searching for a Loved One', icon:'user-search'},
@@ -1531,13 +1546,13 @@ const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const byId = id => ARTICLES.find(a => a.id === id);
 const escapeHtml = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-/* in-memory state (no localStorage in artifacts) */
+/* app state (bookmarks, quick notes and theme are saved in this browser) */
 const state = {
   dark: false,
   collapsed: false,
-  bookmarks: new Set(['hipaa','insurance-questions']),
+  bookmarks: new Set((()=>{ try{ const b=JSON.parse(localStorage.getItem('banyan-kb-bookmarks')||'null'); if(Array.isArray(b)) return b; }catch(e){} return ['hipaa','insurance-questions']; })()),
   recentlyViewed: [],
-  recentSearches: ['neither confirm nor deny','needs vob','medicaid','methadone'],
+  recentSearches: ['confirm or deny','needs vob','medicaid','methadone'],
   view: 'dashboard',
   user: null,
 };
@@ -1610,7 +1625,7 @@ function renderDashboard(){
         <div class="absolute -right-8 -top-10 opacity-10"><i data-lucide="leaf" style="width:180px;height:180px;color:#fff"></i></div>
         <div class="relative">
           <div class="inline-flex items-center gap-2 text-white/80 text-xs font-600 mb-3 bg-white/15 px-3 py-1 rounded-full">
-            <i data-lucide="sun" class="w-3.5 h-3.5"></i> Good morning, ${(state.user&&(state.user.given_name||(state.user.name||'').split(' ')[0]))||'there'}
+            <i data-lucide="sun" class="w-3.5 h-3.5"></i> ${(h=>h<12?'Good morning':h<18?'Good afternoon':'Good evening')(new Date().getHours())}, ${(state.user&&(state.user.given_name||(state.user.name||'').split(' ')[0]))||'there'}
           </div>
           <h2 class="font-display font-700 text-white text-2xl md:text-3xl leading-tight max-w-lg">Everything you need, one keystroke away.</h2>
           <p class="text-white/85 mt-2 text-sm max-w-md">Press <span class="kbd" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff">⌘</span> <span class="kbd" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff">K</span> to search mid-call. Jump into a guide below to get started.</p>
@@ -1667,19 +1682,12 @@ function renderDashboard(){
           <div class="kcard p-5">
             <h3 class="font-display font-600 flex items-center gap-2 mb-3" style="color:var(--text)"><i data-lucide="megaphone" class="w-[18px] h-[18px]" style="color:var(--green)"></i> Announcements</h3>
             <div class="space-y-3">
-              ${C.callout('info','Consolidated SOP v2.0 is live','The Alliance Team SOP now consolidates every client protocol update from Dec 2 2025 – Jul 24 2026. Effective Jul 28.')}
-              ${C.callout('warn','Reminder: “Needs VOB” only','It is the only Lead Priority you enter — no reason to use the others.')}
+              ${C.callout('warn','Transferred calls can come back','If a facility doesn’t answer, the call returns to you (except Lake Worth and Seminole). Always give the ticket number.')}
+              ${C.callout('info','Medical records: website first','Ticket only if they need contact. Urgent → warm transfer to Vivienne.')}
+              <button onclick="openArticle('campaign-updates')" class="btn btn-ghost w-full justify-center"><i data-lucide="megaphone" class="w-4 h-4"></i> See all campaign updates</button>
             </div>
           </div>
 
-          <div class="kcard p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-display font-600 flex items-center gap-2" style="color:var(--text)"><i data-lucide="graduation-cap" class="w-[18px] h-[18px]" style="color:var(--green)"></i> Training Progress</h3>
-              <span class="font-data font-800 text-sm" style="color:var(--green)">72%</span>
-            </div>
-            ${[['New-hire onboarding',100],['Compliance & HIPAA',80],['Objection mastery',55],['Advanced de-escalation',40]].map(([n,p])=>`
-              <div class="mb-2.5"><div class="flex justify-between text-xs mb-1" style="color:var(--text-2)"><span>${n}</span><span class="font-data font-700">${p}%</span></div><div class="pbar"><span style="width:${p}%"></span></div></div>`).join('')}
-          </div>
 
           <div class="kcard p-5">
             <h3 class="font-display font-600 flex items-center gap-2 mb-3" style="color:var(--text)"><i data-lucide="bookmark" class="w-[18px] h-[18px]" style="color:var(--green)"></i> Pinned Documents</h3>
@@ -1885,9 +1893,10 @@ function buildRightPanel(a){
 
     <div>
       <div class="text-[11px] font-700 uppercase tracking-wider mb-2.5 flex items-center gap-1.5" style="color:var(--text-3)"><i data-lucide="pen-line" class="w-3.5 h-3.5"></i> Quick notes</div>
-      <textarea placeholder="Jot a note for this call…" class="w-full h-24 text-sm rounded-xl p-3 outline-none resize-none thin-scroll" style="background:var(--surface-2);border:1px solid var(--line);color:var(--text)"></textarea>
+      <textarea id="quickNotes" placeholder="Jot a note for this call…" oninput="try{localStorage.setItem('banyan-kb-notes',this.value)}catch(e){}" class="w-full h-24 text-sm rounded-xl p-3 outline-none resize-none thin-scroll" style="background:var(--surface-2);border:1px solid var(--line);color:var(--text)"></textarea>
     </div>`;
   $('#rightPanel').classList.remove('view-hidden');
+  try{ const n=$('#quickNotes'); if(n) n.value=localStorage.getItem('banyan-kb-notes')||''; }catch(e){}
   icons();
   setupTocSpy();
 }
@@ -1928,12 +1937,13 @@ function toggleBookmark(id, btn){
   let saved;
   if (state.bookmarks.has(id)) { state.bookmarks.delete(id); saved=false; }
   else { state.bookmarks.add(id); saved=true; }
-  const icon = btn.querySelector('i'), label = btn.querySelector('span');
-  icon.style.cssText = saved ? 'fill:var(--green);color:var(--green)' : '';
-  label.textContent = saved ? 'Saved' : 'Save';
+  try{ localStorage.setItem('banyan-kb-bookmarks', JSON.stringify([...state.bookmarks])); }catch(e){}
+  const icon = btn.querySelector('svg, i'), label = btn.querySelector('span');
+  if (icon) icon.style.cssText = saved ? 'fill:var(--green);color:var(--green)' : '';
+  if (label) label.textContent = saved ? 'Saved' : 'Save';
   toast(saved ? 'Bookmarked' : 'Removed bookmark');
   // refresh right panel bookmark list if visible
-  if (state.view==='article'){ const a=byId(id); if(a) buildRightPanel(a); }
+  if (state.view==='article'){ const a=byId(id); if(a && !a.wide) buildRightPanel(a); }
 }
 function copyLink(id){
   const url = location.origin + location.pathname + '#' + id;
@@ -1958,8 +1968,10 @@ function toggleDark(){
   state.dark = !state.dark;
   document.documentElement.classList.toggle('dark', state.dark);
   $('#themeIcon').setAttribute('data-lucide', state.dark ? 'sun' : 'moon');
+  try{ localStorage.setItem('banyan-kb-theme', state.dark?'dark':'light'); }catch(e){}
   icons();
 }
+try{ if(localStorage.getItem('banyan-kb-theme')==='dark') document.addEventListener('DOMContentLoaded',()=>{ if(!state.dark) toggleDark(); }); }catch(e){}
 
 /* ---------- SEARCH (command palette) ---------- */
 function openCmdK(){
@@ -2353,7 +2365,7 @@ $('#cmdk-overlay').addEventListener('click', e=>{ if(e.target.id==='cmdk-overlay
 window.addEventListener('scroll', updateReadProgress, {passive:true});
 
 /* placeholder for the notifications button */
-function openPanel(){ toast('You’re all caught up'); }
+function openPanel(){ openArticle('campaign-updates'); }
 
 /* ---------- AUTH · Google Sign-In ---------- */
 /* Dedicated OAuth client for the Banyan KB. To go live, add THIS app's hosting
@@ -2405,7 +2417,6 @@ function applyUser(u){
   const sbN=document.getElementById('sbName'); if(sbN) sbN.textContent=u.name;
 }
 
-function demoEnter(){ onSignedIn({ name:'Maria Reyes', email:'maria@allianceglobalsolutions.com', picture:'', given_name:'Maria' }); }
 
 function signOut(){
   if(GAUTH_CONFIGURED && window.google) google.accounts.id.disableAutoSelect();
