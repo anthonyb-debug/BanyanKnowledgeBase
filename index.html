@@ -332,6 +332,110 @@
     .kbg-mobile-brand .kbg-brand-name { font-size: 15px; }
   }
   @media (prefers-reduced-motion: reduce) { .kbg-card { animation: none; } }
+
+  /* ---------- Facility Directory (live from Google Sheets) ---------- */
+  .fd-notices { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1rem; }
+  .fd-notices:empty { display:none; }
+  .fd-notice { display:flex; gap:.6rem; align-items:flex-start; padding:.7rem .9rem; border-radius:12px; font-size:.9rem; line-height:1.5;
+    background:color-mix(in srgb,#F59E0B 12%,var(--surface)); border:1px solid color-mix(in srgb,#F59E0B 34%,var(--line)); color:var(--text); }
+  .fd-notice svg, .fd-notice i { color:#D97706; flex-shrink:0; margin-top:.15rem; width:16px; height:16px; }
+  .fd-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:.75rem 1rem; margin-bottom:.75rem; }
+  .fd-search { position:relative; flex:1 1 380px; }
+  .fd-search > .fd-sicon { position:absolute; left:15px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--text-3); pointer-events:none; }
+  .fd-search input { width:100%; height:52px; padding:0 3rem 0 2.75rem; font:500 1rem 'Inter',sans-serif; color:var(--text);
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px; box-shadow:var(--shadow); outline:none; }
+  .fd-search input::placeholder { color:var(--text-3); font-weight:400; }
+  .fd-search input:focus { border-color:var(--green); box-shadow:0 0 0 4px var(--ring); outline:none; }
+  .fd-search input::-webkit-search-cancel-button { display:none; }
+  .fd-search .kbd, .fd-clear { position:absolute; right:12px; top:50%; transform:translateY(-50%); }
+  .fd-clear { width:30px; height:30px; border-radius:999px; display:grid; place-items:center; background:var(--surface-2); border:1px solid var(--line); color:var(--text-2); cursor:pointer; }
+  .fd-clear:hover { color:var(--text); border-color:var(--accent); }
+  .fd-clear[hidden], .fd-search .kbd[hidden] { display:none; }
+  .fd-meta { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .9rem; font-size:.8rem; color:var(--text-3); }
+  .fd-meta b { color:var(--text); font-weight:700; }
+  .fd-meta a, .fd-meta button.fd-link { color:var(--green); font-weight:600; background:none; border:0; padding:0; cursor:pointer; text-decoration:none; font-size:.8rem; }
+  .fd-meta a:hover, .fd-meta button.fd-link:hover { text-decoration:underline; }
+
+  .fd-needs { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; margin-bottom:1rem; }
+  .fd-needs-label { white-space:nowrap; font-size:.82rem; font-weight:600; color:var(--text-2); margin-right:.25rem; }
+  .fd-need { height:32px; padding:0 .85rem; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--text-2);
+    font:600 .8rem 'Inter',sans-serif; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s, border-color .15s; }
+  .fd-need:hover { border-color:var(--accent); color:var(--green-dark); background:var(--green-soft); }
+  html.dark .fd-need:hover { color:var(--text); }
+  .fd-need[aria-pressed="true"] { background:var(--green); border-color:var(--green); color:#fff; }
+
+  .fd-layout { display:grid; grid-template-columns:minmax(260px,340px) 1fr; gap:1rem; align-items:start; }
+  .fd-list { position:sticky; top:calc(4rem + 12px); max-height:calc(100vh - 4rem - 24px); overflow-y:auto; overscroll-behavior:contain; padding:.4rem; }
+  .fd-list ul { list-style:none; margin:0; padding:0; }
+  .fd-row { display:block; width:100%; text-align:left; padding:.65rem .75rem; border-radius:10px; border:0; border-left:3px solid transparent;
+    background:transparent; color:var(--text-2); cursor:pointer; font-family:'Inter',sans-serif; }
+  .fd-row:hover { background:var(--green-soft); }
+  .fd-row.is-active { background:var(--green-soft); border-left-color:var(--green); }
+  .fd-row-top { display:flex; align-items:center; gap:.45rem; }
+  .fd-row-name { font:600 .92rem 'Poppins',sans-serif; color:var(--text); }
+  .fd-row-loc { display:block; font-size:.78rem; color:var(--text-3); margin-top:1px; }
+  .fd-row-line { display:block; font:600 .85rem 'Nunito',sans-serif; color:var(--text-2); margin-top:.25rem; font-variant-numeric:tabular-nums; }
+  .fd-row-line.is-need { color:var(--text); }
+  .fd-row-line.is-empty { color:var(--text-3); font-style:italic; font-weight:500; }
+  .fd-row.is-down .fd-row-line { text-decoration:line-through; color:var(--text-3); }
+  .fd-num { color:var(--green); font-weight:800; }
+  html.dark .fd-num { color:#81C784; }
+  #fdRoot mark { background:color-mix(in srgb,#F59E0B 32%,transparent); color:inherit; border-radius:3px; padding:0 1px; }
+
+  .fd-detail { padding:1.5rem 1.6rem 1.6rem; min-height:300px; }
+  .fd-d-head { display:flex; justify-content:space-between; align-items:flex-start; gap:.75rem; flex-wrap:wrap; }
+  .fd-d-title { font:700 1.6rem/1.15 'Poppins',sans-serif; color:var(--text); letter-spacing:-.01em; }
+  .fd-d-loc { display:flex; align-items:center; gap:.35rem; font-size:.88rem; color:var(--text-2); margin-top:.35rem; }
+  .fd-d-loc svg, .fd-d-loc i { width:14px; height:14px; color:var(--text-3); }
+  .fd-badges { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.6rem; }
+  .fd-lines { display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1.1rem; }
+  .fd-line { flex:1 1 230px; padding:.9rem 1rem; border-radius:14px; background:var(--green-soft); border:1px solid color-mix(in srgb,var(--green) 18%,var(--line)); }
+  .fd-line.is-plain { background:var(--surface-2); border-color:var(--line); }
+  .fd-line-label { font-size:.75rem; font-weight:600; color:var(--text-2); margin-bottom:.35rem; }
+  .fd-phone-row { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+  .fd-phone-row + .fd-phone-row { margin-top:.4rem; }
+  .fd-phone { font:800 1.45rem 'Nunito',sans-serif; color:var(--text); text-decoration:none; font-variant-numeric:tabular-nums; letter-spacing:.01em; }
+  a.fd-phone:hover { color:var(--green); }
+  .fd-phone-tag { font-size:.75rem; font-weight:600; color:var(--text-3); }
+  .is-down .fd-phone { text-decoration:line-through; color:var(--text-3); }
+  .fd-line-val { font-size:.95rem; color:var(--text); line-height:1.6; }
+  .fd-copybtn { padding:.3rem .6rem; font-size:.75rem; }
+  .fd-sub { font:600 .95rem 'Poppins',sans-serif; color:var(--text); margin:1.5rem 0 .5rem; }
+  .fd-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); border-top:1px solid var(--line); }
+  .fd-cell { padding:.75rem .9rem .75rem 0; border-bottom:1px solid var(--line); }
+  .fd-cell dt { font-size:.78rem; font-weight:600; color:var(--text-3); margin-bottom:.2rem; }
+  .fd-cell dd { margin:0; font-size:.92rem; color:var(--text); line-height:1.7; overflow-wrap:anywhere; }
+  .fd-cell dd.is-empty { color:var(--text-3); font-style:italic; font-size:.85rem; }
+  .fd-cell.is-focus { grid-column:1/-1; order:-1; margin:.6rem 0; padding:.8rem 1rem; border-radius:12px; border:1px solid var(--accent); background:var(--green-soft); }
+  .fd-cell.is-focus dt { color:var(--green-dark); }
+  html.dark .fd-cell.is-focus dt { color:#A5D6A7; }
+  .fd-cell.is-focus dd { font-size:1.05rem; }
+  .fd-copy { display:inline-flex; align-items:center; gap:3px; height:24px; padding:0 .45rem; margin:1px; vertical-align:baseline;
+    border:1px solid color-mix(in srgb,var(--green) 40%,transparent); background:var(--surface); border-radius:7px;
+    font:800 .85rem 'Nunito',sans-serif; color:var(--green-dark); cursor:copy; font-variant-numeric:tabular-nums; }
+  html.dark .fd-copy { color:#A5D6A7; }
+  .fd-copy:hover { background:var(--green); border-color:var(--green); color:#fff; }
+  .fd-copy svg { width:12px; height:12px; }
+  .fd-copy.is-copied, .fd-copybtn.is-copied { background:var(--green-dark); border-color:var(--green-dark); color:#fff; }
+  .fd-mail { color:var(--green); font-weight:600; text-decoration:none; }
+  .fd-mail:hover { text-decoration:underline; }
+  .fd-hint { font-size:.78rem; color:var(--text-3); margin-top:1rem; }
+  .fd-empty { padding:1.6rem 1rem; text-align:center; color:var(--text-2); font-size:.88rem; line-height:1.6; }
+  .fd-empty .btn { margin-top:.6rem; }
+  .fd-loading { padding:1.5rem; display:flex; align-items:center; gap:.6rem; color:var(--text-2); font-size:.88rem; }
+  .fd-spin { width:16px; height:16px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--green); animation:fdspin .8s linear infinite; }
+  @keyframes fdspin { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .fd-spin { animation:none; } }
+  @media (max-width: 900px){
+    .fd-layout { grid-template-columns:1fr; }
+    .fd-list { position:static; max-height:42vh; }
+    .fd-detail { padding:1.1rem; }
+    .fd-d-title { font-size:1.35rem; }
+    .fd-search .kbd { display:none; }
+    .fd-needs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
+    .fd-needs::-webkit-scrollbar { display:none; }
+  }
+  @media print { .fd-list, .fd-toolbar, .fd-needs { display:none; } .fd-layout { display:block; } }
 </style>
 </head>
 <body class="font-body antialiased">
@@ -1097,54 +1201,17 @@ const ARTICLES = [
   },
   {
     id:'directory', cat:'Directory', icon:'map-pin', title:'Facility Directory',
-    author:'BTC Facility Directory', updated:'Jul 31, 2026', read:4,
-    tags:['directory','facilities','phone','fax','address','levels of care','locations','medicaid'],
-    excerpt:'Phone, fax, address, and levels of care for every Banyan facility.',
-    body:()=>{
-      const F=[
-        {n:'Alaska',a:'4701 Begich Circle, Wasilla, AK 99654',loc:'VA ONLY',ph:['907-290-5450 — Option 3'],fax:'907-290-5460'},
-        {n:'BHOPB — CADS #100 (Lake Worth)',a:'7859 Lake Worth Road, Lake Worth, FL 33467',loc:'Detox/Res/PHP/MH/Tele',ph:['561-465-1000 — Ext. 1370 (or 1000)'],fax:'561-465-1004'},
-        {n:'BHOPB — Lake Worth Nursing',a:'7859 Lake Worth Road, Lake Worth, FL 33467',loc:'Nursing',ph:['561-466-4673'],fax:''},
-        {n:'BHOPB — Seaside',a:'106 Blossom Lane, Palm Beach Shores, FL 33404',loc:'Detox/Res/PHP/Tele',ph:['561-389-9594','561-465-1220'],fax:'561-465-1201'},
-        {n:'Boca',a:'1000 NW 15th Street, Boca Raton, FL 33486',loc:'Detox/Res/MH',ph:['561-404-5505 — Option 2 (clinical staff)','561-404-5505 — Option 7 (residence)'],fax:'561-409-4920'},
-        {n:'Chicago (Naperville)',a:'50 S. Main Street, Naperville, IL 60540',loc:'PHP/IOP/Tele',ph:['630-333-9912'],fax:'630-210-8164'},
-        {n:'Clearbrook, MA',a:'83 Hospital Road, Baldwinville, MA 01436',loc:'Detox/Res/MH',ph:['978-350-5003'],fax:'978-894-2161'},
-        {n:'Clearbrook, PA (Laurel Run)',a:'1100 E. Northampton Street, Wilkes-Barre, PA 18706',loc:'Detox/Res/Tele',ph:['570-823-1171 — Option 3'],fax:'570-823-1582'},
-        {n:'Delaware',a:'21 West Clark Ave Suite #4001, Milford, DE 19963',loc:'ALL LOC',ph:['302-315-0002 — Ext. 265, 261, or 276'],fax:'302-725-0030'},
-        {n:'Gulf Breeze',a:'Gulf Breeze / Pensacola, FL',loc:'',ph:['850-677-0302 — Option 1 or 3','850-605-3295'],fax:''},
-        {n:'Heartland',a:'1237 E. 1600 North Road, Gilman, IL 60540',loc:'Detox/Res',ph:['331-302-8043 (temporary)','815-707-2136 — Option 3 (nursing)'],fax:'815-707-0241'},
-        {n:'Massachusetts PHP',a:'66K Concord Street, Wilmington, MA 01887',loc:'PHP/IOP/Tele',ph:['978-737-7272'],fax:'978-909-3226'},
-        {n:'Palm Springs',a:'67580 Jones Road, Cathedral City, CA 92234',loc:'ALL LOC',ph:['760-616-5800','760-668-9003 — Option 3'],fax:'760-673-7443'},
-        {n:'Palm Springs — PHP (Clinical)',a:'Cathedral City, CA',loc:'PHP',ph:['760-992-3470 — Ext. 827'],fax:''},
-        {n:'Palm Springs — PHP (Housing)',a:'Cathedral City, CA',loc:'PHP',ph:['760-992-3470 — Ext. 834'],fax:''},
-        {n:'Philadelphia',a:'100 North Buckstown Dr Suite 100E, Langhorne, PA 19047',loc:'PHP/IOP/Tele',ph:['215-249-6226 — Ext. 612'],fax:'267-512-6053'},
-        {n:'Pompano',a:'950 N Federal Hwy, Pompano Beach, FL 33062',loc:'PHP/IOP/Tele/MH',ph:['954-533-7705 — Ext. 163','954-821-2285'],fax:'954-533-7717'},
-        {n:'Sebring',a:'1062 Lake Sebring Dr, Sebring, FL 33870',loc:'Detox/Res/MH',ph:['863-451-0084'],fax:'863-658-4120'},
-        {n:'Stuart',a:'201 SE Osceola Street, Stuart, FL 34994',loc:'Detox/Res',ph:['772-200-4411 — Ext. 320, 301, or Option 2'],fax:'772-324-6455'},
-        {n:'Tampa',a:'Tampa, FL',loc:'',ph:['813-521-7847','727-456-8190 (main facility)'],fax:''},
-        {n:'Texas #1739',a:'4168 Co Road 444, Waelder, TX 78959',loc:'Detox/Res/PHP/Tele',ph:['830-283-3003 — Ext. 880'],fax:'830-522-2375'},
-        {n:'Castle Rock',a:'Castle Rock, CO',loc:'',ph:['303-381-8340 — Option 1 and 3','720-877-0640 (not working)'],fax:''},
-      ];
-      const badges = s => s ? s.split('/').map(x=>`<span class="badge badge-green">${x.trim()}</span>`).join(' ') : '<span class="badge badge-gray">See team</span>';
-      return `
-        ${C.callout('info','Reference as of 7/31/2026','Programs, numbers, and levels of care change — confirm current details with your team. The main corporate line is 954-533-7705 (extensions vary by department).')}
-        <div class="grid sm:grid-cols-2 gap-3">
-          ${F.map(f=>`
-            <div class="kcard p-4">
-              <div class="font-display font-600 mb-1" style="color:var(--text)">${f.n}</div>
-              <div class="text-xs mb-2 flex items-start gap-1" style="color:var(--text-3)"><i data-lucide="map-pin" class="w-3 h-3 mt-0.5 shrink-0"></i> ${f.a}</div>
-              <div class="flex flex-wrap gap-1 mb-2.5">${badges(f.loc)}</div>
-              <div class="text-sm font-data space-y-0.5" style="color:var(--text-2)">
-                ${(Array.isArray(f.ph)?f.ph:[f.ph]).map((p,i)=>`<div><span class="font-700" style="color:${i===0?'var(--green-dark)':'transparent'}">PH</span> ${p}</div>`).join('')}
-                ${f.fax?`<div><span class="font-700" style="color:var(--text-3)">FAX</span> ${f.fax}</div>`:''}
-              </div>
-            </div>`).join('')}
-        </div>
-        <h2 id="medicaid">Medicaid acceptance</h2>
-        ${C.callout('success','States where Medicaid is accepted','Florida, Alaska, Delaware, Massachusetts, and Colorado (per this directory).')}
-        ${C.callout('warn','Cross-check the payment policy','The Policies & Guidelines document states Medicaid/Medicare is not accepted for direct billing. Acceptance is state-specific — confirm the current standing rule with a supervisor before advising a caller. See Insurance & Payment Policy.')}
-      `;
-    },
+    author:'BTC Facility Directory (Google Sheets)', updated:'Live', read:1,
+    wide:true, onMount:()=>fdMount(),
+    tags:['directory','phone','extension','medicaid'],
+    excerpt:'Numbers, transfer instructions and department extensions for every facility, live from the Facility Directory sheet.',
+    body:()=>`
+      ${fdShell()}
+      <h2 id="medicaid">Medicaid acceptance</h2>
+      ${C.callout('success','States where Medicaid is accepted','Florida, Alaska, Delaware, Massachusetts, and Colorado (per this directory).')}
+      ${C.callout('warn','Cross-check the payment policy','The Policies & Guidelines document states Medicaid/Medicare is not accepted for direct billing. Acceptance is state-specific — confirm the current standing rule with a supervisor before advising a caller. See Insurance & Payment Policy.')}
+      ${C.callout('info','Main corporate line','954-533-7705 — extensions vary by department. See Key Phone Numbers.')}
+    `,
   },
   {
     id:'key-numbers', cat:'Directory', icon:'phone-call', title:'Key Phone Numbers',
@@ -1522,7 +1589,7 @@ function openArticle(id){
   const isBookmarked = state.bookmarks.has(id);
 
   $('#content').innerHTML = `
-    <article class="fade-up max-w-3xl mx-auto" id="articleRoot">
+    <article class="fade-up ${a.wide?'':'max-w-3xl'} mx-auto" id="articleRoot">
       <!-- meta bar -->
       <div class="flex flex-wrap items-center gap-2 mb-3">
         <span class="badge badge-green"><i data-lucide="${a.icon}" class="w-3.5 h-3.5"></i> ${a.cat}</span>
@@ -1561,11 +1628,12 @@ function openArticle(id){
       </div>
     </article>`;
 
-  buildRightPanel(a);
   styleArticleHeadings();
+  if (a.wide) hideRightPanel(); else buildRightPanel(a);
   icons();
   window.scrollTo(0,0);
   updateReadProgress();
+  if (a.onMount) a.onMount();
 }
 
 /* add classes to h2 inside article for consistent styling + collect for TOC */
@@ -1703,6 +1771,7 @@ function plain(a){
   if (a.faq) t += ' ' + a.faq.map(f=>f.q+' '+f.a).join(' ');
   if (a.objections) t += ' ' + a.objections.map(o=>o.o+' '+o.r).join(' ');
   if (a.downloads) t += ' ' + a.downloads.map(d=>d.n).join(' ');
+  if (a.id==='directory' && FD.items.length) t += ' ' + FD.items.map(i=>i.raw).join(' · ');
   return t;
 }
 
@@ -1760,6 +1829,7 @@ function runSearch(q){
 function pickResult(id, q){
   if (q && !state.recentSearches.includes(q)) state.recentSearches = [q, ...state.recentSearches].slice(0,5);
   closeCmdK();
+  if (id==='directory' && q) fdQuery = q;
   openArticle(id);
 }
 
@@ -1777,6 +1847,292 @@ function scrollTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
 function animateBars(){
   requestAnimationFrame(()=> $$('.pbar > span').forEach(s=>{ const w=s.style.width; s.style.width='0'; requestAnimationFrame(()=>{ s.style.width=w; }); }));
 }
+
+/* ===================================================================
+   FACILITY DIRECTORY — live from Google Sheets
+   -------------------------------------------------------------------
+   The directory is read from the "Facility Directory" tab of the
+   Google Sheet below. Edit the sheet and the Knowledge Base picks it
+   up within a minute (or immediately with "Refresh").
+
+   Setup (already done if the sheet opens for "Anyone with the link"):
+     1. Sheet → Share → General access → "Anyone with the link" → Viewer
+     2. Paste the ID from the sheet URL (between /d/ and /edit) below.
+
+   How the tab is read (row 1 = headers):
+     • Columns are recognised by header text: "Facility", "Location",
+       "Phone", "Extension / Transfer", "Notes". Optional columns that
+       also show if you add them: "Address", "Fax", "Levels of Care".
+     • Every other column with a header becomes a "Caller needs" button
+       (Belongings, Insurance Updates, Law Enforcement, …). Add a column
+       → a new button appears. No code change needed.
+     • A row with no phone and nothing in the needs columns (e.g.
+       "Calls from Insurance Companies") shows as an alert banner.
+     • "Not Working" in the facility name or notes marks the line as down.
+     • "Name - instruction" (spaced hyphen) shows the instruction as a rule.
+   =================================================================== */
+const FD_SHEET_ID   = '1Fhstp9OQUVwp1zUGuUjkPNIrXqNT9YNW-_ORk237HbM';
+const FD_SHEET_NAME = 'Facility Directory';
+const FD_REFRESH_MS = 60000;
+
+const FD_STATES={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',DC:'District of Columbia'};
+const FD_CACHE_KEY='banyan-kb-facility-directory';
+
+const FD={ items:[], notices:[], needs:[], labels:[], fields:{}, loaded:false, synced:null, error:'', fromCache:false };
+let fdNeed='all', fdSelKey=null, fdQuery='', fdFiltered=[], fdLoading=false;
+
+const fdEsc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fdCellText = c => c&&c.v!=null ? String(typeof c.v==='string'?c.v:(c.f!=null?c.f:c.v)).trim() : '';
+
+async function fdFetch(){
+  const url=`https://docs.google.com/spreadsheets/d/${FD_SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(FD_SHEET_NAME)}&tq=${encodeURIComponent('select *')}`;
+  const res=await fetch(url,{cache:'no-store'});
+  if(!res.ok) throw new Error(`the sheet returned ${res.status}. Check it is shared as “Anyone with the link can view”`);
+  const text=await res.text(), i=text.indexOf('{'), j=text.lastIndexOf('}');
+  let data=null; try{ data=JSON.parse(text.slice(i,j+1)); }catch(e){}
+  if(!data) throw new Error('the sheet could not be read. Check it is shared as “Anyone with the link can view”');
+  if(data.status==='error'){ const er=(data.errors&&data.errors[0])||{}; throw new Error(`the “${FD_SHEET_NAME}” tab could not be read (${er.detailed_message||er.message||'query error'})`); }
+  const cols=(data.table&&data.table.cols)||[], rows=(data.table&&data.table.rows)||[];
+  return { labels: cols.map(c=>String(c.label||'').trim()), rows: rows.map(r=>cols.map((_,k)=>fdCellText((r.c||[])[k]))) };
+}
+
+async function loadFD(silent){
+  if(fdLoading) return; fdLoading=true;
+  try{
+    const {labels,rows}=await fdFetch();
+    fdBuild(labels,rows);
+    FD.loaded=true; FD.synced=new Date(); FD.error=''; FD.fromCache=false;
+    try{ localStorage.setItem(FD_CACHE_KEY, JSON.stringify({labels,rows,at:FD.synced.toISOString()})); }catch(e){}
+  }catch(e){
+    FD.error=e.message||'the request failed';
+    if(!FD.loaded){
+      try{ const c=JSON.parse(localStorage.getItem(FD_CACHE_KEY)||'null');
+        if(c){ fdBuild(c.labels,c.rows); FD.loaded=true; FD.fromCache=true; FD.synced=new Date(c.at); } }catch(_){}
+    }
+  }finally{ fdLoading=false; }
+  if(document.getElementById('fdRoot')) renderFD();
+}
+
+function fdBuild(labels,rows){
+  const find=(re,fb)=>{ const i=labels.findIndex(l=>re.test(l)); return i>=0?i:fb; };
+  const f={ name:find(/facility|^name$/i,0), loc:find(/location|city/i,1), phone:find(/phone/i,2),
+            transfer:find(/extension|transfer/i,-1), notes:find(/^notes?$/i,-1),
+            address:find(/address/i,-1), fax:find(/^fax/i,-1), levels:find(/level|^loc$|program/i,-1) };
+  const used=new Set(Object.values(f).filter(i=>i>=0));
+  const needs=labels.map((l,i)=>({i,label:l,short:l.split('/')[0].trim()||l})).filter(n=>n.label&&!used.has(n.i));
+  const items=[], notices=[], seen={};
+  rows.forEach(v=>{
+    if(!v.some(Boolean)) return;
+    let name=v[f.name]||''; if(!name) return;
+    const phone=v[f.phone]||'', needVals={};
+    needs.forEach(n=>{ if(v[n.i]) needVals[n.i]=v[n.i]; });
+    if(!/\d{3}\D{0,3}\d{4}/.test(phone) && !Object.keys(needVals).length){
+      notices.push({title:name, text:v.filter((x,i)=>x&&i!==f.name).join('. ')}); return;
+    }
+    const get=k=>f[k]>=0?(v[f[k]]||''):'';
+    const notes=get('notes');
+    const down=/not\s*working/i.test(name)||/not\s*working/i.test(notes);
+    name=name.replace(/\s*[–—-]\s*not\s*working\s*$/i,'').trim();
+    let rule=''; const m=name.match(/^(.{2,40}?)\s+-\s+(.{15,})$/); if(m){ name=m[1].trim(); rule=m[2].trim(); }
+    const loc=v[f.loc]||'', addr=get('address');
+    let key=name+'|'+loc; seen[key]=(seen[key]||0)+1; if(seen[key]>1) key+='|'+seen[key];
+    const st=((addr||loc).match(/\b([A-Z]{2})\b(?:\s*\d{5})?\s*$/)||[])[1];
+    const raw=[name,rule,loc,addr,phone,get('fax'),get('transfer'),notes,get('levels'),...Object.values(needVals),down?'not working':'',st&&FD_STATES[st]||''].filter(Boolean).join(' · ');
+    items.push({key,name,rule,loc,addr,phone,down,fax:get('fax'),transfer:get('transfer'),notes,levels:get('levels'),needs:needVals,
+      raw, hay:raw.toLowerCase(), digits:raw.replace(/(\d)[\s.()-]{1,2}(?=\d)/g,'$1')});
+  });
+  Object.assign(FD,{labels,fields:f,needs,items,notices});
+  if(fdNeed!=='all' && !needs.some(n=>String(n.i)===fdNeed)) fdNeed='all';
+}
+
+/* ---- search & formatting ---- */
+const fdTokens=q=>q.toLowerCase().split(/\s+/).filter(Boolean);
+function fdMatch(it,toks){
+  return toks.every(t=>{
+    const d=t.replace(/\D/g,'');
+    if(d.length>=3 && d.length===t.replace(/[\s().+-]/g,'').length) return it.digits.includes(d)||it.hay.includes(t);
+    return it.hay.includes(t);
+  });
+}
+function fdHl(text,toks){
+  const s=String(text||''); if(!toks||!toks.length) return fdEsc(s);
+  const low=s.toLowerCase(), mk=new Array(s.length).fill(false);
+  toks.forEach(t=>{ let i=low.indexOf(t); while(i>=0){ for(let k=i;k<i+t.length;k++) mk[k]=true; i=low.indexOf(t,i+t.length); } });
+  let out='',open=false;
+  for(let i=0;i<s.length;i++){ if(mk[i]&&!open){out+='<mark>';open=true;} else if(!mk[i]&&open){out+='</mark>';open=false;} out+=fdEsc(s[i]); }
+  return out+(open?'</mark>':'');
+}
+const FD_TOKEN=/([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|(\(?\b\d{3}\)?[\s.-]?\d{3}[\s.-]\d{4}\b)|(\b\d{1,5}\b)/g;
+const FD_COPY_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+/* Phone → call link, email → mail link + copy, extension → copy button. plain = no buttons (for list rows). */
+function fdRich(text,toks,plain){
+  const s=String(text||''); let out='',last=0,m; FD_TOKEN.lastIndex=0;
+  while((m=FD_TOKEN.exec(s))){
+    out+=fdHl(s.slice(last,m.index),toks); const tok=m[0];
+    if(plain){
+      const isNum=!m[3]||/ext\.?\s*$/i.test(s.slice(Math.max(0,m.index-7),m.index))||tok.length>=3;
+      out+=isNum&&!m[1]?`<span class="fd-num">${fdHl(tok,toks)}</span>`:fdHl(tok,toks);
+    } else if(m[1]) out+=`<a class="fd-mail" href="mailto:${fdEsc(tok)}">${fdHl(tok,toks)}</a> <button class="fd-copy" data-copy="${fdEsc(tok)}" aria-label="Copy ${fdEsc(tok)}">${FD_COPY_ICON}</button>`;
+    else if(m[2]) out+=`<a class="fd-mail" href="tel:${fdEsc(tok.replace(/[^\d+]/g,''))}">${fdHl(tok,toks)}</a> <button class="fd-copy" data-copy="${fdEsc(tok)}" aria-label="Copy ${fdEsc(tok)}">${FD_COPY_ICON}</button>`;
+    else {
+      const isExt=/ext\.?\s*$/i.test(s.slice(Math.max(0,m.index-7),m.index))||tok.length>=3;
+      out+=isExt?`<button class="fd-copy" data-copy="${fdEsc(tok)}" title="Copy ${fdEsc(tok)}" aria-label="Copy extension ${fdEsc(tok)}">${fdHl(tok,toks)}</button>`:fdHl(tok,toks);
+    }
+    last=m.index+tok.length;
+  }
+  return out+fdHl(s.slice(last),toks);
+}
+function fdPhones(text){
+  const out=[], re=/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]\d{4}/g; let m;
+  while((m=re.exec(text))){ out.push({num:m[0], tag:/fax/i.test(text.slice(Math.max(0,m.index-8),m.index))?'Fax':''}); }
+  return out;
+}
+
+/* ---- render ---- */
+function fdShell(){
+  return `
+    <div id="fdRoot">
+      <div id="fdError"></div>
+      <div id="fdNotices" class="fd-notices"></div>
+      <div class="fd-toolbar">
+        <div class="fd-search">
+          <i data-lucide="search" class="fd-sicon"></i>
+          <label for="fdSearch" class="sr-only">Search facilities</label>
+          <input id="fdSearch" type="search" autocomplete="off" spellcheck="false" value="${fdEsc(fdQuery)}"
+            placeholder="Search a facility, city, state, phone or extension"
+            oninput="fdOnSearch(this.value)" onkeydown="fdOnKey(event)" />
+          <span class="kbd" id="fdKbd" ${fdQuery?'hidden':''} title="Press / to search">/</span>
+          <button class="fd-clear" id="fdClear" ${fdQuery?'':'hidden'} onclick="fdClearSearch()" aria-label="Clear search"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="fd-meta">
+          <span id="fdCount"></span>
+          <span id="fdSynced"></span>
+          <button class="fd-link" onclick="fdRefresh()">Refresh</button>
+          <a href="https://docs.google.com/spreadsheets/d/${FD_SHEET_ID}/edit" target="_blank" rel="noopener">Edit in Google Sheets</a>
+        </div>
+      </div>
+      <div id="fdNeeds" class="fd-needs" role="group" aria-label="What the caller needs"></div>
+      <div class="fd-layout">
+        <nav id="fdList" class="fd-list kcard thin-scroll" aria-label="Facilities"><div class="fd-loading"><span class="fd-spin"></span> Loading the directory from Google Sheets…</div></nav>
+        <section id="fdDetail" class="fd-detail kcard" aria-live="polite"></section>
+      </div>
+    </div>`;
+}
+function fdMount(){
+  if(!FD.loaded) loadFD(); else renderFD();
+  if(window.matchMedia('(min-width: 901px)').matches) setTimeout(()=>{ const i=document.getElementById('fdSearch'); if(i) i.focus({preventScroll:true}); },60);
+}
+function fdRefresh(){
+  const s=document.getElementById('fdSynced'); if(s) s.textContent='Refreshing…';
+  loadFD();
+}
+function renderFD(){
+  const root=document.getElementById('fdRoot'); if(!root) return;
+  const errEl=document.getElementById('fdError');
+  errEl.innerHTML=FD.error?`<div class="callout cl-danger mb-3" role="alert"><i data-lucide="octagon-alert" class="ic w-5 h-5"></i><div>
+      <div class="font-600 mb-1" style="color:var(--text)">Couldn’t reach the Facility Directory sheet</div>
+      <div>${fdEsc(FD.error)}.${FD.loaded?` Showing the copy saved ${FD.synced?FD.synced.toLocaleString([],{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'earlier'}; numbers may be out of date.`:''}
+      <button class="btn btn-ghost mt-2" onclick="fdRefresh()"><i data-lucide="refresh-cw" class="w-4 h-4"></i> Try again</button></div></div></div>`:'';
+  if(!FD.loaded){ document.getElementById('fdList').innerHTML=FD.error?'':document.getElementById('fdList').innerHTML; document.getElementById('fdDetail').hidden=true; icons(); return; }
+
+  const toks=fdTokens(fdQuery);
+  fdFiltered=FD.items.filter(it=>fdMatch(it,toks));
+  if(!fdFiltered.some(it=>it.key===fdSelKey)) fdSelKey=fdFiltered[0]?fdFiltered[0].key:null;
+
+  document.getElementById('fdNotices').innerHTML=FD.notices.map(n=>
+    `<div class="fd-notice" role="note"><i data-lucide="flag"></i><span><b>${fdEsc(n.title)}:</b> ${fdRich(n.text,[],false)}</span></div>`).join('');
+  document.getElementById('fdNeeds').innerHTML=FD.needs.length?`<span class="fd-needs-label">Caller needs</span>`+
+    [{i:'all',short:'All details',label:'Show every detail'}].concat(FD.needs).map(n=>
+      `<button class="fd-need" aria-pressed="${String(n.i)===fdNeed}" title="${fdEsc(n.label)}" onclick="fdSetNeed('${n.i}')">${fdEsc(n.short)}</button>`).join(''):'';
+  document.getElementById('fdCount').innerHTML=toks.length?`<b>${fdFiltered.length}</b> of ${FD.items.length} facilities`:`<b>${FD.items.length}</b> facilities`;
+  document.getElementById('fdSynced').textContent=FD.synced?`${FD.fromCache?'Saved copy from':'Updated'} ${FD.synced.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}`:'';
+
+  const need=FD.needs.find(n=>String(n.i)===fdNeed);
+  const list=document.getElementById('fdList');
+  if(!fdFiltered.length){
+    list.innerHTML=`<div class="fd-empty">No facility matches “${fdEsc(fdQuery)}”.<br>Try a city, a state, a phone number or an extension.<br><button class="btn btn-ghost" onclick="fdClearSearch()"><i data-lucide="x" class="w-4 h-4"></i> Clear search</button></div>`;
+  } else {
+    list.innerHTML='<ul>'+fdFiltered.map(it=>{
+      let line;
+      if(need){ const v=it.needs[need.i]; line=v?`<span class="fd-row-line is-need">${fdRich(v,toks,true)}</span>`:`<span class="fd-row-line is-empty">Not listed</span>`; }
+      else { const p=fdPhones(it.phone)[0]; line=`<span class="fd-row-line">${fdHl(p?p.num:it.phone,toks)}${it.transfer?` <span style="color:var(--text-3);font-weight:600">${fdHl(it.transfer,toks)}</span>`:''}</span>`; }
+      const badge=it.down?'<span class="badge" style="background:color-mix(in srgb,#DC2626 14%,transparent);color:#B91C1C">Not working</span>':it.rule?'<span class="badge badge-amber">Rule</span>':'';
+      const act=it.key===fdSelKey;
+      return `<li><button class="fd-row${act?' is-active':''}${it.down?' is-down':''}" data-key="${fdEsc(it.key)}" ${act?'aria-current="true"':''} onclick="fdSelect(this.dataset.key,true)">
+        <span class="fd-row-top"><span class="fd-row-name">${fdHl(it.name,toks)}</span>${badge}</span>
+        ${it.loc?`<span class="fd-row-loc">${fdHl(it.loc,toks)}</span>`:''}${line}</button></li>`;
+    }).join('')+'</ul>';
+  }
+  fdRenderDetail(toks);
+  icons();
+}
+function fdRenderDetail(toks){
+  const el=document.getElementById('fdDetail');
+  const it=FD.items.find(x=>x.key===fdSelKey);
+  el.hidden=!it; if(!it){ el.innerHTML=''; return; }
+  const L=FD.labels, f=FD.fields, lbl=(k,d)=>fdEsc(f[k]>=0&&L[f[k]]?L[f[k]]:d);
+  const phones=fdPhones(it.phone);
+  if(it.fax && !phones.some(p=>p.tag==='Fax')) fdPhones(it.fax).forEach(p=>phones.push({num:p.num,tag:'Fax'}));
+  const phoneHtml=phones.length?phones.map(p=>`<div class="fd-phone-row">
+      ${it.down||p.tag==='Fax'?`<span class="fd-phone">${fdHl(p.num,toks)}</span>`:`<a class="fd-phone" href="tel:${fdEsc(p.num.replace(/\D/g,''))}">${fdHl(p.num,toks)}</a>`}
+      ${p.tag?`<span class="fd-phone-tag">${p.tag}</span>`:''}
+      <button class="btn btn-ghost fd-copybtn" data-copy="${fdEsc(p.num)}"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy</button></div>`).join('')
+    :`<div class="fd-line-val">${fdRich(it.phone,toks)}</div>`;
+  const lines=[`<div class="fd-line${it.down?' is-down':''}"><div class="fd-line-label">${lbl('phone','Phone number')}${it.down?' · <span style="color:#DC2626">not working</span>':''}</div>${phoneHtml}</div>`];
+  if(it.transfer) lines.push(`<div class="fd-line is-plain"><div class="fd-line-label">${lbl('transfer','Transfer instructions')}</div><div class="fd-line-val">${fdRich(it.transfer,toks)}</div></div>`);
+  if(it.notes) lines.push(`<div class="fd-line is-plain"><div class="fd-line-label">${lbl('notes','Notes')}</div><div class="fd-line-val">${fdRich(it.notes,toks)}</div></div>`);
+  const levels=it.levels?it.levels.split(/[\/,]/).map(x=>x.trim()).filter(Boolean):[];
+  const hasNeeds=Object.keys(it.needs).length>0;
+  const cells=FD.needs.map(n=>{ const v=it.needs[n.i];
+    return `<div class="fd-cell${String(n.i)===fdNeed?' is-focus':''}"><dt>${fdEsc(n.label)}</dt>${v?`<dd>${fdRich(v,toks)}</dd>`:'<dd class="is-empty">Not listed</dd>'}</div>`; }).join('');
+  el.innerHTML=`
+    <div class="fd-d-head"><div>
+      <div class="fd-d-title">${fdHl(it.name,toks)}</div>
+      ${it.addr||it.loc?`<div class="fd-d-loc"><i data-lucide="map-pin"></i>${fdHl(it.addr||it.loc,toks)}</div>`:''}
+      ${levels.length?`<div class="fd-badges">${levels.map(x=>`<span class="badge badge-green">${fdHl(x,toks)}</span>`).join('')}</div>`:''}
+    </div>${it.down?'<span class="badge" style="background:color-mix(in srgb,#DC2626 14%,transparent);color:#B91C1C">Not working</span>':''}</div>
+    ${it.rule?`<div class="fd-notice" style="margin-top:.9rem" role="note"><i data-lucide="flag"></i><span>${fdRich(it.rule,toks)}</span></div>`:''}
+    <div class="fd-lines">${lines.join('')}</div>
+    ${FD.needs.length&&hasNeeds?`<div class="fd-sub">Caller needs</div><dl class="fd-grid">${cells}</dl><div class="fd-hint">Click any extension to copy it.</div>`
+      :`<div class="fd-hint">No department extensions are listed for this facility yet. Use the main line${it.transfer?' and the transfer instructions':''}.</div>`}`;
+}
+
+/* ---- interactions ---- */
+function fdSetNeed(i){ fdNeed=String(i); renderFD(); }
+function fdSelect(key,fromClick){
+  fdSelKey=key; renderFD();
+  if(fromClick && window.matchMedia('(max-width: 900px)').matches) document.getElementById('fdDetail').scrollIntoView({behavior:'smooth',block:'start'});
+}
+let fdT;
+function fdOnSearch(v){
+  fdQuery=v.trim();
+  document.getElementById('fdClear').hidden=!v; document.getElementById('fdKbd').hidden=!!v;
+  clearTimeout(fdT); fdT=setTimeout(renderFD,80);
+}
+function fdClearSearch(){ const i=document.getElementById('fdSearch'); i.value=''; fdOnSearch(''); renderFD(); i.focus(); }
+function fdOnKey(e){
+  if(e.key==='Escape' && e.target.value){ e.preventDefault(); e.stopPropagation(); fdClearSearch(); return; }
+  if(e.key!=='ArrowDown' && e.key!=='ArrowUp') return;
+  e.preventDefault(); if(!fdFiltered.length) return;
+  let i=fdFiltered.findIndex(x=>x.key===fdSelKey);
+  i=e.key==='ArrowDown'?Math.min(fdFiltered.length-1,i+1):Math.max(0,i-1);
+  fdSelKey=fdFiltered[i].key; renderFD();
+  document.querySelector('#fdList .fd-row.is-active')?.scrollIntoView({block:'nearest'});
+}
+async function fdCopy(text,btn){
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){ const t=document.createElement('textarea'); t.value=text; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); try{document.execCommand('copy');}catch(_){} t.remove(); }
+  toast(`Copied ${text}`);
+  if(btn){ btn.classList.add('is-copied'); clearTimeout(btn._t); btn._t=setTimeout(()=>btn.classList.remove('is-copied'),1200); }
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('#fdRoot [data-copy]'); if(b){ e.preventDefault(); fdCopy(b.dataset.copy,b); } });
+document.addEventListener('keydown',e=>{
+  if(e.key!=='/'||e.ctrlKey||e.metaKey||e.altKey) return;
+  const i=document.getElementById('fdSearch'); if(!i) return;
+  const t=e.target; if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable)) return;
+  e.preventDefault(); i.focus();
+});
+setInterval(()=>{ if(state.user) loadFD(true); }, FD_REFRESH_MS);
 
 /* ---------- EVENTS ---------- */
 document.addEventListener('keydown', e=>{
@@ -1826,7 +2182,7 @@ function handleCredential(resp){
 function onSignedIn(user){
   state.user = user;
   const g=document.getElementById('authGate'); if(g) g.style.display='none';
-  if(!appBooted){ renderNav(); renderDashboard(); icons(); appBooted=true; }
+  if(!appBooted){ renderNav(); renderDashboard(); icons(); appBooted=true; loadFD(true); }
   else { renderDashboard(); }
   applyUser(user);
 }
